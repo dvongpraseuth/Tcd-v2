@@ -1,0 +1,17 @@
+{
+  // Configuration Cloudflare Workers — mode "static-only assets".
+  // Référence : https://developers.cloudflare.com/workers/static-assets/
+  //
+  // Aucun script Worker (pas de `main`) : Cloudflare sert directement
+  // les fichiers du répertoire `assets.directory` comme un site statique,
+  // avec HTTPS auto sur tcd-v2.<account-subdomain>.workers.dev.
+  "name": "tcd-v2",
+  "compatibility_date": "2026-06-01",
+  "assets": {
+    "directory": "./",
+    "not_found_handling": "single-page-application"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
