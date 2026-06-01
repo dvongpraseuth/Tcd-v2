@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TC Davézieux — Tennis & Padel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bleu: #2E3B8C;
+      --bleu-fonce: #1E2A6E;
+      --bleu-clair: #3D4FA6;
+      --jaune: #F2C94C;
+      --jaune-clair: #F7DC7F;
+      --jaune-pale: #FFF8E1;
+      --noir: #1A1A1A;
+      --blanc: #FFFFFF;
+      --gris-50: #F8F9FA;
+      --gris-100: #F1F3F5;
+      --gris-200: #E9ECEF;
+      --gris-300: #DEE2E6;
+      --gris-500: #ADB5BD;
+      --gris-700: #495057;
+      --gris-800: #343A40;
+      --radius: 12px;
+      --radius-lg: 20px;
+      --shadow: 0 4px 24px rgba(46, 59, 140, 0.08);
+      --shadow-lg: 0 12px 48px rgba(46, 59, 140, 0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      color: var(--noir);
+      background: var(--blanc);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ═══════════════ NAV ═══════════════ */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--gris-200);
+      transition: all 0.3s ease;
+    }
+
+    nav.scrolled {
+      box-shadow: var(--shadow);
+    }
+
+    .nav-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 72px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: var(--bleu);
+    }
+
+    .nav-logo img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .nav-logo-text {
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.3px;
+    }
+
+    .nav-logo-text span {
+      color: var(--jaune);
+      background: var(--bleu);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--gris-700);
+      font-weight: 500;
+      font-size: 14px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--bleu);
+      background: var(--gris-100);
+    }
+
+    .nav-cta {
+      background: var(--bleu) !important;
+      color: var(--blanc) !important;
+      font-weight: 600 !important;
+      padding: 10px 24px !important;
+    }
+
+    .nav-cta:hover {
+      background: var(--bleu-fonce) !important;
+      color: var(--blanc) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(46, 59, 140, 0.3);
+    }
+
+    .nav-mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .nav-mobile-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--noir);
+      margin: 6px 0;
+      transition: all 0.3s;
+    }
+
+    /* ═══════════════ HERO ═══════════════ */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      background: var(--bleu);
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('images/drone-complexe-bleu.jpg');
+      background-size: cover;
+      background-position: center 40%;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to right, rgba(30, 42, 110, 0.92) 0%, rgba(30, 42, 110, 0.75) 50%, rgba(30, 42, 110, 0.6) 100%),
+        radial-gradient(ellipse at 20% 80%, rgba(242, 201, 76, 0.15) 0%, transparent 60%);
+      z-index: 1;
+    }
+
+    .hero-pattern {
+      position: absolute;
+      inset: 0;
+      opacity: 0.04;
+      z-index: 1;
+      background-image:
+        linear-gradient(30deg, var(--blanc) 12%, transparent 12.5%, transparent 87%, var(--blanc) 87.5%, var(--blanc)),
+        linear-gradient(150deg, var(--blanc) 12%, transparent 12.5%, transparent 87%, var(--blanc) 87.5%, var(--blanc)),
+        linear-gradient(30deg, var(--blanc) 12%, transparent 12.5%, transparent 87%, var(--blanc) 87.5%, var(--blanc)),
+        linear-gradient(150deg, var(--blanc) 12%, transparent 12.5%, transparent 87%, var(--blanc) 87.5%, var(--blanc)),
+        linear-gradient(60deg, rgba(255,255,255,0.6) 25%, transparent 25.5%, transparent 75%, rgba(255,255,255,0.6) 75%, rgba(255,255,255,0.6)),
+        linear-gradient(60deg, rgba(255,255,255,0.6) 25%, transparent 25.5%, transparent 75%, rgba(255,255,255,0.6) 75%, rgba(255,255,255,0.6));
+      background-size: 80px 140px;
+      background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+    }
+
+    .hero-accent {
+      position: absolute;
+      bottom: -20%;
+      right: -10%;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: var(--jaune);
+      opacity: 0.06;
+      filter: blur(80px);
+      z-index: 1;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 120px 32px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .hero-content {
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(242, 201, 76, 0.15);
+      border: 1px solid rgba(242, 201, 76, 0.3);
+      color: var(--jaune);
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 28px;
+    }
+
+    .hero-badge::before {
+      content: '🎾';
+      font-size: 14px;
+    }
+
+    .hero h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 64px;
+      font-weight: 800;
+      color: var(--blanc);
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 em {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--jaune);
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.6;
+      max-width: 480px;
+      margin-bottom: 40px;
+      font-weight: 300;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      border-radius: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--jaune);
+      color: var(--bleu-fonce);
+    }
+
+    .btn-primary:hover {
+      background: var(--jaune-clair);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(242, 201, 76, 0.35);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--blanc);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--blanc);
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .hero-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+
+    .hero-card {
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      transition: all 0.3s ease;
+    }
+
+    .hero-card:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-4px);
+    }
+
+    .hero-card:first-child {
+      grid-column: span 2;
+      background: rgba(242, 201, 76, 0.1);
+      border-color: rgba(242, 201, 76, 0.2);
+    }
+
+    .hero-card-number {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--jaune);
+      letter-spacing: -1px;
+    }
+
+    .hero-card-label {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: 4px;
+      font-weight: 400;
+    }
+
+    .hero-card-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+
+    /* ═══════════════ SECTION COMMUNES ═══════════════ */
+    section {
+      padding: 100px 32px;
+    }
+
+    .section-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--bleu);
+      margin-bottom: 16px;
+    }
+
+    .section-label::before {
+      content: '';
+      width: 24px;
+      height: 2px;
+      background: var(--jaune);
+    }
+
+    .section-title {
+      font-size: 44px;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      color: var(--noir);
+    }
+
+    .section-title em {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--bleu);
+    }
+
+    .section-desc {
+      font-size: 17px;
+      color: var(--gris-700);
+      line-height: 1.6;
+      max-width: 560px;
+      margin-bottom: 48px;
+    }
+
+    /* ═══════════════ PROCHAINS MATCHS ═══════════════ */
+    .matchs {
+      background: var(--gris-50);
+    }
+
+    .matchs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .match-card {
+      background: var(--blanc);
+      border-radius: var(--radius);
+      padding: 28px;
+      border: 1px solid var(--gris-200);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .match-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+      border-color: var(--bleu);
+    }
+
+    .match-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--bleu), var(--jaune));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .match-card:hover::after { opacity: 1; }
+
+    .match-date {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--bleu);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .match-championship {
+      font-size: 11px;
+      background: var(--jaune-pale);
+      color: var(--bleu-fonce);
+      padding: 4px 10px;
+      border-radius: 100px;
+      display: inline-block;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .match-teams {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .match-vs {
+      color: var(--gris-500);
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .match-home {
+      color: var(--bleu);
+    }
+
+    /* ═══════════════ INSTALLATIONS ═══════════════ */
+    .installations-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .install-card {
+      background: var(--blanc);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--gris-200);
+      transition: all 0.3s ease;
+    }
+
+    .install-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+
+    .install-card-visual {
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      position: relative;
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .install-card-visual.tennis {
+      background-image: url('images/tennis-match-jeune.jpg');
+    }
+
+    .install-card-visual.padel {
+      background-image: url('images/padel-action-babolat.jpg');
+    }
+
+    .install-card-visual.clubhouse {
+      background-image: url('images/equipe-club-region.jpg');
+    }
+
+    .install-card-visual::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,0.4) 100%);
+    }
+
+    .install-card-body {
+      padding: 28px;
+    }
+
+    .install-card-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .install-card-desc {
+      font-size: 14px;
+      color: var(--gris-700);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .install-card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .install-tag {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 6px;
+      background: var(--gris-100);
+      color: var(--gris-700);
+    }
+
+    /* ═══════════════ ÉCOLE DE TENNIS ═══════════════ */
+    .ecole {
+      background: var(--bleu);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ecole::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 80% 20%, rgba(242, 201, 76, 0.08) 0%, transparent 60%);
+    }
+
+    .ecole .section-label { color: var(--jaune); }
+    .ecole .section-title { color: var(--blanc); }
+    .ecole .section-title em { color: var(--jaune); }
+    .ecole .section-desc { color: rgba(255, 255, 255, 0.7); }
+
+    .ecole-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .ecole-card {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      transition: all 0.3s ease;
+    }
+
+    .ecole-card:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-4px);
+    }
+
+    .ecole-card-icon {
+      font-size: 32px;
+      margin-bottom: 16px;
+    }
+
+    .ecole-card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--blanc);
+      margin-bottom: 8px;
+    }
+
+    .ecole-card-age {
+      font-size: 13px;
+      color: var(--jaune);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .ecole-card-desc {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.55);
+      line-height: 1.5;
+    }
+
+    /* ═══════════════ TARIFS ═══════════════ */
+    .tarifs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .tarif-card {
+      border: 1px solid var(--gris-200);
+      border-radius: var(--radius-lg);
+      padding: 40px 32px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .tarif-card:hover {
+      border-color: var(--bleu);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .tarif-card.featured {
+      background: var(--bleu);
+      border-color: var(--bleu);
+      color: var(--blanc);
+    }
+
+    .tarif-card.featured .tarif-label,
+    .tarif-card.featured .tarif-features li {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .tarif-card.featured .tarif-price {
+      color: var(--jaune);
+    }
+
+    .tarif-card.featured .btn {
+      background: var(--jaune);
+      color: var(--bleu-fonce);
+    }
+
+    .tarif-badge {
+      position: absolute;
+      top: -12px;
+      right: 24px;
+      background: var(--jaune);
+      color: var(--bleu-fonce);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 100px;
+      letter-spacing: 0.5px;
+    }
+
+    .tarif-icon {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    .tarif-name {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .tarif-label {
+      font-size: 14px;
+      color: var(--gris-700);
+      margin-bottom: 24px;
+    }
+
+    .tarif-price {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--bleu);
+      letter-spacing: -2px;
+      margin-bottom: 4px;
+    }
+
+    .tarif-price span {
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    .tarif-note {
+      font-size: 12px;
+      color: var(--gris-500);
+      margin-bottom: 28px;
+    }
+
+    .tarif-features {
+      list-style: none;
+      margin-bottom: 32px;
+    }
+
+    .tarif-features li {
+      font-size: 14px;
+      color: var(--gris-700);
+      padding: 8px 0;
+      border-bottom: 1px solid var(--gris-100);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tarif-card.featured .tarif-features li {
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .tarif-features li::before {
+      content: '✓';
+      font-weight: 700;
+      color: var(--jaune);
+      font-size: 14px;
+    }
+
+    .tarif-btn {
+      width: 100%;
+      justify-content: center;
+      background: var(--gris-100);
+      color: var(--bleu);
+    }
+
+    .tarif-btn:hover {
+      background: var(--bleu);
+      color: var(--blanc);
+    }
+
+    /* ═══════════════ TARIFS EXTRAS ═══════════════ */
+    .tarif-toggle {
+      display: flex;
+      gap: 4px;
+      background: var(--gris-100);
+      border-radius: 10px;
+      padding: 4px;
+      width: fit-content;
+      margin-bottom: 40px;
+    }
+
+    .tarif-toggle-btn {
+      padding: 10px 28px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      background: transparent;
+      color: var(--gris-700);
+      transition: all 0.2s;
+    }
+
+    .tarif-toggle-btn.active {
+      background: var(--bleu);
+      color: var(--blanc);
+      box-shadow: 0 2px 8px rgba(46, 59, 140, 0.25);
+    }
+
+    .tarifs-extras {
+      margin-top: 60px;
+      padding-top: 48px;
+      border-top: 1px solid var(--gris-200);
+    }
+
+    .tarifs-extras-title {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 24px;
+      color: var(--noir);
+    }
+
+    .tarifs-extras-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .extra-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 20px;
+      border: 1px solid var(--gris-200);
+      border-radius: var(--radius);
+      background: var(--blanc);
+      transition: all 0.2s;
+    }
+
+    .extra-card:hover {
+      border-color: var(--bleu);
+      box-shadow: var(--shadow);
+    }
+
+    .extra-card.highlight {
+      border-color: #27ae60;
+      background: #f0fdf4;
+    }
+
+    .extra-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .extra-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .extra-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--noir);
+      margin-bottom: 2px;
+    }
+
+    .extra-detail {
+      font-size: 12px;
+      color: var(--gris-500);
+    }
+
+    .extra-price {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--bleu);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+      .tarifs-extras-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════════════ EQUIPE ═══════════════ */
+    .equipe {
+      background: var(--gris-50);
+    }
+
+    .equipe-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .equipe-card {
+      background: var(--blanc);
+      border-radius: var(--radius-lg);
+      padding: 36px 28px;
+      border: 1px solid var(--gris-200);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .equipe-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+
+    .equipe-avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--blanc);
+    }
+
+    .equipe-avatar.a1 { background: linear-gradient(135deg, var(--bleu), var(--bleu-clair)); }
+    .equipe-avatar.a2 { background: linear-gradient(135deg, #E0A820, var(--jaune)); }
+    .equipe-avatar.a3 { background: linear-gradient(135deg, var(--gris-700), var(--gris-800)); }
+
+    .equipe-name {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      letter-spacing: -0.2px;
+    }
+
+    .equipe-role {
+      font-size: 13px;
+      color: var(--bleu);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .equipe-diplome {
+      font-size: 12px;
+      color: var(--gris-500);
+      line-height: 1.4;
+    }
+
+    /* ═══════════════ LABELS ═══════════════ */
+    .labels {
+      background: var(--blanc);
+    }
+
+    .labels-row {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+      padding: 40px 0;
+      border-top: 1px solid var(--gris-200);
+      border-bottom: 1px solid var(--gris-200);
+    }
+
+    .label-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .label-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--gris-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .label-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gris-700);
+      text-align: center;
+    }
+
+    /* ═══════════════ CONTACT ═══════════════ */
+    .contact {
+      background: var(--noir);
+      color: var(--blanc);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      right: -200px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: var(--bleu);
+      opacity: 0.15;
+      filter: blur(100px);
+    }
+
+    .contact .section-label { color: var(--jaune); }
+    .contact .section-title { color: var(--blanc); }
+    .contact .section-desc { color: rgba(255, 255, 255, 0.5); }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .contact-info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .contact-item-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(242, 201, 76, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .contact-item-label {
+      font-size: 12px;
+      color: var(--gris-500);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .contact-item-value {
+      font-size: 16px;
+      color: var(--blanc);
+      font-weight: 500;
+    }
+
+    .contact-item-value a {
+      color: var(--jaune);
+      text-decoration: none;
+    }
+
+    .contact-map {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      height: 360px;
+      background: var(--gris-800);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .contact-map-placeholder {
+      text-align: center;
+      color: var(--gris-500);
+    }
+
+    .contact-map-placeholder .icon { font-size: 48px; margin-bottom: 12px; }
+    .contact-map-placeholder p { font-size: 14px; }
+
+    /* ═══════════════ FOOTER ═══════════════ */
+    footer {
+      background: var(--noir);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 40px 32px;
+    }
+
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-left {
+      font-size: 13px;
+      color: var(--gris-500);
+    }
+
+    .footer-left strong {
+      color: var(--blanc);
+      font-weight: 600;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--gris-500);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--jaune);
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 12px;
+    }
+
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .footer-social a:hover {
+      background: var(--bleu);
+      border-color: var(--bleu);
+    }
+
+    /* ═══════════════ RESPONSIVE ═══════════════ */
+    @media (max-width: 1024px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+      .hero h1 { font-size: 48px; }
+      .matchs-grid { grid-template-columns: repeat(2, 1fr); }
+      .ecole-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      section { padding: 64px 20px; }
+      .nav-links { display: none; }
+      .nav-mobile-toggle { display: block; }
+      .hero h1 { font-size: 36px; letter-spacing: -1px; }
+      .hero-sub { font-size: 16px; }
+      .hero-cards { grid-template-columns: 1fr; }
+      .hero-card:first-child { grid-column: span 1; }
+      .section-title { font-size: 32px; }
+      .matchs-grid,
+      .installations-grid,
+      .tarifs-grid,
+      .equipe-grid { grid-template-columns: 1fr; }
+      .ecole-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+      .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <img src="logo-tcd.jpg" alt="TC Davézieux">
+        <div class="nav-logo-text">TC Davézieux <span>TENNIS & PADEL</span></div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#matchs">Matchs</a></li>
+        <li><a href="#installations">Installations</a></li>
+        <li><a href="#ecole">École</a></li>
+        <li><a href="#tarifs">Tarifs</a></li>
+        <li><a href="#equipe">Équipe</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="https://tenup.fft.fr/club/50070493/reservations" class="nav-cta" target="_blank">Réservation →</a></li>
+      </ul>
+      <button class="nav-mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('show')">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-pattern"></div>
+    <div class="hero-accent"></div>
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-badge">Depuis 1986 à Davézieux</div>
+        <h1>Tennis & Padel<br>pour <em>tous</em></h1>
+        <p class="hero-sub">4 courts de tennis, 2 pistes de padel, une école labellisée et une équipe passionnée au cœur de l'Ardèche.</p>
+        <div class="hero-actions">
+          <a href="https://tenup.fft.fr/club/50070493/reservations" class="btn btn-primary" target="_blank">Réservation Adhérents →</a>
+          <a href="https://www.anybuddyapp.com/club-davezieux-tennis" class="btn btn-outline" target="_blank">Réservation Guest →</a>
+        </div>
+      </div>
+      <div class="hero-cards">
+        <div class="hero-card">
+          <div class="hero-card-icon">📊</div>
+          <div class="hero-card-number">~270</div>
+          <div class="hero-card-label">adhérents cette saison</div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-number">4</div>
+          <div class="hero-card-label">courts de tennis éclairés</div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-number">2</div>
+          <div class="hero-card-label">pistes de padel</div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-number">8</div>
+          <div class="hero-card-label">équipes en championnat</div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-number">8h–22h</div>
+          <div class="hero-card-label">accès courts toute l'année</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCHAINS MATCHS -->
+  <section class="matchs" id="matchs">
+    <div class="section-inner">
+      <div class="section-label">Compétitions</div>
+      <h2 class="section-title">Prochains <em>matchs</em></h2>
+      <p class="section-desc">Suivez nos 8 équipes engagées en championnat cette saison. Venez encourager nos joueurs au complexe de Jossols !</p>
+      <div class="matchs-grid">
+        <div class="match-card">
+          <div class="match-date">17 mars 2026</div>
+          <div class="match-championship">Challenge des Dames</div>
+          <div class="match-teams">
+            <span class="match-home">DAVÉZIEUX TC 1</span>
+            <span class="match-vs">vs</span>
+            <span>PORTES-LÈS-VALENCE</span>
+          </div>
+        </div>
+        <div class="match-card">
+          <div class="match-date">27 mars 2026</div>
+          <div class="match-championship">Coupe des Messieurs</div>
+          <div class="match-teams">
+            <span class="match-home">TCD 1 à TCD 4</span>
+            <span class="match-vs">—</span>
+            <span>4 rencontres</span>
+          </div>
+        </div>
+        <div class="match-card">
+          <div class="match-date">28 mars 2026</div>
+          <div class="match-championship">Interclubs Padel</div>
+          <div class="match-teams">
+            <span class="match-home">TCD 1 & TCD 2</span>
+            <span class="match-vs">—</span>
+            <span>2 rencontres</span>
+          </div>
+        </div>
+        <div class="match-card">
+          <div class="match-date">28 mars 2026</div>
+          <div class="match-championship">13-14 ans Garçons</div>
+          <div class="match-teams">
+            <span class="match-home">DAVÉZIEUX TC 1</span>
+            <span class="match-vs">vs</span>
+            <span>ANNONAY TC 1</span>
+          </div>
+        </div>
+        <div class="match-card">
+          <div class="match-date">29 mars 2026</div>
+          <div class="match-championship">Printemps Dames</div>
+          <div class="match-teams">
+            <span class="match-home">TCD 1 & TCD 2</span>
+            <span class="match-vs">—</span>
+            <span>2 rencontres</span>
+          </div>
+        </div>
+        <div class="match-card">
+          <div class="match-date">29 mars 2026</div>
+          <div class="match-championship">Printemps Messieurs</div>
+          <div class="match-teams">
+            <span class="match-home">TCD 2 & TCD 3</span>
+            <span class="match-vs">—</span>
+            <span>2 rencontres</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTALLATIONS -->
+  <section class="installations" id="installations">
+    <div class="section-inner">
+      <div class="section-label">Nos installations</div>
+      <h2 class="section-title">Un complexe <em>complet</em></h2>
+      <p class="section-desc">Au cœur du complexe sportif de Jossols, profitez d'installations modernes et éclairées, accessibles toute l'année.</p>
+      <div class="installations-grid">
+        <div class="install-card">
+          <div class="install-card-visual tennis"></div>
+          <div class="install-card-body">
+            <h3 class="install-card-title">4 Courts de Tennis</h3>
+            <p class="install-card-desc">2 courts en béton poreux (rénovés en 2015) et 2 courts en résine, tous éclairés et en extérieur.</p>
+            <div class="install-card-tags">
+              <span class="install-tag">Béton poreux × 2</span>
+              <span class="install-tag">Résine × 2</span>
+              <span class="install-tag">Éclairage</span>
+            </div>
+          </div>
+        </div>
+        <div class="install-card">
+          <div class="install-card-visual padel"></div>
+          <div class="install-card-body">
+            <h3 class="install-card-title">2 Pistes de Padel</h3>
+            <p class="install-card-desc">Pistes PHOENIX et CONSERVATEUR en gazon synthétique, éclairées. Tournois P25 à P2000 autorisés.</p>
+            <div class="install-card-tags">
+              <span class="install-tag">Gazon synthétique</span>
+              <span class="install-tag">Éclairage</span>
+              <span class="install-tag">⭐ 4.3/5</span>
+            </div>
+            <a href="https://padelslot.fr" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 16px; padding: 12px 24px; background: var(--bleu); color: var(--blanc); font-weight: 700; font-size: 15px; border-radius: 10px; text-decoration: none; transition: all 0.25s ease; box-shadow: 0 4px 16px rgba(46, 59, 140, 0.25);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(46,59,140,0.35)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 16px rgba(46,59,140,0.25)'">🏸 Trouver des partenaires pour un padel →</a>
+          </div>
+        </div>
+        <div class="install-card">
+          <div class="install-card-visual clubhouse"></div>
+          <div class="install-card-body">
+            <h3 class="install-card-title">Club House</h3>
+            <p class="install-card-desc">Bar, cuisine, terrasse avec barbecue, salle de jeux, TV, Wi-Fi. Le lieu de vie du club après vos matchs.</p>
+            <div class="install-card-tags">
+              <span class="install-tag">Bar</span>
+              <span class="install-tag">Terrasse</span>
+              <span class="install-tag">BBQ</span>
+              <span class="install-tag">Wi-Fi</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PADELSLOT CTA -->
+  <section style="padding: 60px 24px; background: linear-gradient(135deg, var(--bleu-fonce) 0%, var(--bleu) 50%, var(--bleu-clair) 100%);">
+    <div style="max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 48px; flex-wrap: wrap; justify-content: center;">
+      <div style="flex: 1; min-width: 280px; color: var(--blanc);">
+        <div style="font-size: 14px; font-weight: 600; color: var(--jaune); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;">Nouveau</div>
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; line-height: 1.2; margin-bottom: 16px;">Trouvez des partenaires<br>pour un <span style="color: var(--jaune);">padel</span></h2>
+        <p style="font-size: 16px; opacity: 0.85; line-height: 1.6; margin-bottom: 8px;">Fini les groupes WhatsApp ! Avec PadelSlot, organisez vos parties en quelques clics : créez un match, trouvez des joueurs, discutez et jouez.</p>
+        <ul style="list-style: none; padding: 0; margin: 20px 0;">
+          <li style="padding: 6px 0; font-size: 15px; color: rgba(255,255,255,0.9); display: flex; align-items: center; gap: 10px;"><span style="color: var(--jaune); font-weight: 700;">✓</span> Gratuit pour les membres du club</li>
+          <li style="padding: 6px 0; font-size: 15px; color: rgba(255,255,255,0.9); display: flex; align-items: center; gap: 10px;"><span style="color: var(--jaune); font-weight: 700;">✓</span> Organisez une partie en 30 secondes</li>
+          <li style="padding: 6px 0; font-size: 15px; color: rgba(255,255,255,0.9); display: flex; align-items: center; gap: 10px;"><span style="color: var(--jaune); font-weight: 700;">✓</span> Chat intégré entre joueurs</li>
+          <li style="padding: 6px 0; font-size: 15px; color: rgba(255,255,255,0.9); display: flex; align-items: center; gap: 10px;"><span style="color: var(--jaune); font-weight: 700;">✓</span> Gestion des désistements automatique</li>
+        </ul>
+      </div>
+      <div style="flex-shrink: 0; text-align: center;">
+        <a href="https://padelslot.fr" target="_blank" style="display: inline-block; padding: 18px 40px; background: var(--jaune); color: var(--bleu-fonce); font-weight: 800; font-size: 17px; border-radius: 12px; text-decoration: none; transition: all 0.25s ease; box-shadow: 0 8px 32px rgba(242, 201, 76, 0.35);" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 12px 40px rgba(242,201,76,0.5)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 8px 32px rgba(242,201,76,0.35)'">🏸 Rejoindre PadelSlot →</a>
+        <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin-top: 12px;">Accessible sur mobile et ordinateur</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ÉCOLE DE TENNIS -->
+  <section class="ecole" id="ecole">
+    <div class="section-inner">
+      <div class="section-label">École de tennis</div>
+      <h2 class="section-title">Apprendre, progresser,<br><em>s'amuser</em></h2>
+      <p class="section-desc">Du mini-tennis au pôle compétition, notre équipe pédagogique accompagne chaque joueur selon son âge et ses objectifs.</p>
+      <div class="ecole-grid">
+        <div class="ecole-card">
+          <div class="ecole-card-icon">🌟</div>
+          <div class="ecole-card-title">Mini-Tennis</div>
+          <div class="ecole-card-age">4 – 6 ans</div>
+          <div class="ecole-card-desc">25 séances d'1h le mercredi. Découverte ludique du tennis. À partir de 85 €.</div>
+        </div>
+        <div class="ecole-card">
+          <div class="ecole-card-icon">🚀</div>
+          <div class="ecole-card-title">Galaxie Tennis</div>
+          <div class="ecole-card-age">6 – 13 ans</div>
+          <div class="ecole-card-desc">25-30 séances d'1h30. Progression par niveaux (blanc → rouge). À partir de 120 €.</div>
+        </div>
+        <div class="ecole-card">
+          <div class="ecole-card-icon">🎯</div>
+          <div class="ecole-card-title">Ados & Adultes</div>
+          <div class="ecole-card-age">14 ans et +</div>
+          <div class="ecole-card-desc">25-30 séances d'1h15. Cours dames et hommes. À partir de 130 €.</div>
+        </div>
+        <div class="ecole-card">
+          <div class="ecole-card-icon">🏆</div>
+          <div class="ecole-card-title">Pôle Compétition</div>
+          <div class="ecole-card-age">6 – 18 ans</div>
+          <div class="ecole-card-desc">Programme spécifique avec entraînement hebdomadaire supplémentaire. À partir de 195 €.</div>
+        </div>
+        <div class="ecole-card">
+          <div class="ecole-card-icon">♿</div>
+          <div class="ecole-card-title">Tennis Adapté</div>
+          <div class="ecole-card-age">En partenariat avec l'IME ENVOL</div>
+          <div class="ecole-card-desc">Depuis 2015, séances le mercredi matin au gymnase de Jossols. Encadrement par Alexandre Begot.</div>
+        </div>
+        <div class="ecole-card">
+          <div class="ecole-card-icon">💚</div>
+          <div class="ecole-card-title">Tennis & Padel Santé</div>
+          <div class="ecole-card-age">Label FFT Tennis Santé</div>
+          <div class="ecole-card-desc">Programme Cœur de Douceur. 15-20 séances d'1h. 50 €. Référents : P.A. Breuil, C. Mercier.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TARIFS -->
+  <section class="tarifs" id="tarifs">
+    <div class="section-inner">
+      <div class="section-label">Saison 2025-2026</div>
+      <h2 class="section-title">Nos <em>tarifs</em></h2>
+      <p class="section-desc">Adhésion hors licence FFT. Accès courts de 8h à 22h, toute l'année.</p>
+
+      <!-- Toggle -->
+      <div class="tarif-toggle">
+        <button class="tarif-toggle-btn active" onclick="showTarifs('adultes')">Adultes</button>
+        <button class="tarif-toggle-btn" onclick="showTarifs('jeunes')">Jeunes</button>
+      </div>
+
+      <!-- Adultes -->
+      <div class="tarifs-grid" id="tarifs-adultes">
+        <div class="tarif-card">
+          <div class="tarif-icon">🎾</div>
+          <div class="tarif-name">Tennis</div>
+          <div class="tarif-label">Accès aux 4 courts</div>
+          <div class="tarif-price">87€ <span>/ saison</span></div>
+          <div class="tarif-note">Hors licence FFT</div>
+          <ul class="tarif-features">
+            <li>4 courts en accès libre</li>
+            <li>Éclairage inclus</li>
+            <li>Réservation via Ten'Up</li>
+            <li>Championnats par équipes</li>
+          </ul>
+          <a href="#contact" class="btn tarif-btn">S'inscrire</a>
+        </div>
+        <div class="tarif-card featured">
+          <div class="tarif-badge">POPULAIRE</div>
+          <div class="tarif-icon">🎾🏸</div>
+          <div class="tarif-name">Tennis & Padel</div>
+          <div class="tarif-label">Accès complet courts + pistes</div>
+          <div class="tarif-price">137€ <span>/ saison</span></div>
+          <div class="tarif-note" style="color: rgba(255,255,255,0.4)">Hors licence FFT</div>
+          <ul class="tarif-features">
+            <li>4 courts + 2 pistes padel</li>
+            <li>Éclairage inclus</li>
+            <li>Réservation via Ten'Up</li>
+            <li>Championnats tennis et padel</li>
+            <li>Tournois padel P25 à P2000</li>
+          </ul>
+          <a href="#contact" class="btn" style="width:100%;justify-content:center;">S'inscrire →</a>
+        </div>
+        <div class="tarif-card">
+          <div class="tarif-icon">🏸</div>
+          <div class="tarif-name">Padel</div>
+          <div class="tarif-label">Accès aux 2 pistes</div>
+          <div class="tarif-price">94€ <span>/ saison</span></div>
+          <div class="tarif-note">Hors licence FFT</div>
+          <ul class="tarif-features">
+            <li>2 pistes padel</li>
+            <li>Éclairage inclus</li>
+            <li>Réservation via Ten'Up</li>
+            <li>Interclubs padel</li>
+          </ul>
+          <a href="#contact" class="btn tarif-btn">S'inscrire</a>
+        </div>
+      </div>
+
+      <!-- Jeunes -->
+      <div class="tarifs-grid" id="tarifs-jeunes" style="display: none;">
+        <div class="tarif-card">
+          <div class="tarif-icon">🌟</div>
+          <div class="tarif-name">Tennis ≤ 6 ans</div>
+          <div class="tarif-label">Mini-tennis, 3–6 ans</div>
+          <div class="tarif-price">23€ <span>/ saison</span></div>
+          <div class="tarif-note">Hors licence FFT</div>
+          <ul class="tarif-features">
+            <li>Accès mini-tennis</li>
+            <li>Encadrement adapté</li>
+            <li>Le mercredi</li>
+          </ul>
+          <a href="#contact" class="btn tarif-btn">S'inscrire</a>
+        </div>
+        <div class="tarif-card featured">
+          <div class="tarif-badge">7 – 17 ANS</div>
+          <div class="tarif-icon">🎾🏸</div>
+          <div class="tarif-name">Tennis & Padel</div>
+          <div class="tarif-label">Accès complet dès 7 ans</div>
+          <div class="tarif-price">92€ <span>/ saison</span></div>
+          <div class="tarif-note" style="color: rgba(255,255,255,0.4)">Hors licence FFT</div>
+          <ul class="tarif-features">
+            <li>4 courts + 2 pistes padel</li>
+            <li>Éclairage inclus</li>
+            <li>Championnats jeunes</li>
+            <li>Pass Région et aide départementale acceptés</li>
+          </ul>
+          <a href="#contact" class="btn" style="width:100%;justify-content:center;">S'inscrire →</a>
+        </div>
+        <div class="tarif-card">
+          <div class="tarif-icon">🎾</div>
+          <div class="tarif-name">Tennis Jeunes</div>
+          <div class="tarif-label">7–17 ans, tennis uniquement</div>
+          <div class="tarif-price">53€ <span>/ saison</span></div>
+          <div class="tarif-note">Hors licence FFT</div>
+          <ul class="tarif-features">
+            <li>4 courts en accès libre</li>
+            <li>Éclairage inclus</li>
+            <li>Championnats jeunes</li>
+          </ul>
+          <a href="#contact" class="btn tarif-btn">S'inscrire</a>
+        </div>
+      </div>
+
+      <!-- Cours & Locations -->
+      <div class="tarifs-extras">
+        <div class="tarifs-extras-title">Cours & Locations</div>
+        <div class="tarifs-extras-grid">
+          <div class="extra-card">
+            <div class="extra-icon">👶</div>
+            <div class="extra-info">
+              <div class="extra-name">Mini-Tennis (4-6 ans)</div>
+              <div class="extra-detail">25 × 1h · le mercredi</div>
+            </div>
+            <div class="extra-price">85€</div>
+          </div>
+          <div class="extra-card">
+            <div class="extra-icon">🚀</div>
+            <div class="extra-info">
+              <div class="extra-name">Galaxie Tennis (6-13 ans)</div>
+              <div class="extra-detail">25-30 × 1h30</div>
+            </div>
+            <div class="extra-price">à partir de 120€</div>
+          </div>
+          <div class="extra-card">
+            <div class="extra-icon">👩</div>
+            <div class="extra-info">
+              <div class="extra-name">Adultes Dames</div>
+              <div class="extra-detail">25-30 × 1h15</div>
+            </div>
+            <div class="extra-price">140€</div>
+          </div>
+          <div class="extra-card">
+            <div class="extra-icon">👨</div>
+            <div class="extra-info">
+              <div class="extra-name">Adultes Hommes</div>
+              <div class="extra-detail">25-30 × 1h15</div>
+            </div>
+            <div class="extra-price">160€</div>
+          </div>
+          <div class="extra-card">
+            <div class="extra-icon">🏆</div>
+            <div class="extra-info">
+              <div class="extra-name">Pôle Compétition (13-99 ans)</div>
+              <div class="extra-detail">25-30 × 1h15 + hebdo</div>
+            </div>
+            <div class="extra-price">235€</div>
+          </div>
+          <div class="extra-card">
+            <div class="extra-icon">💚</div>
+            <div class="extra-info">
+              <div class="extra-name">Tennis/Padel Santé</div>
+              <div class="extra-detail">15-20 × 1h</div>
+            </div>
+            <div class="extra-price">50€</div>
+          </div>
+          <div class="extra-card">
+            <div class="extra-icon">🎾</div>
+            <div class="extra-info">
+              <div class="extra-name">Location court tennis</div>
+              <div class="extra-detail">Joueurs extérieurs ≥ 15 ans</div>
+            </div>
+            <div class="extra-price">8€ / ticket</div>
+          </div>
+          <div class="extra-card">
+            <div class="extra-icon">🏸</div>
+            <div class="extra-info">
+              <div class="extra-name">Location piste padel</div>
+              <div class="extra-detail">Carnet 4 tickets × 1h30</div>
+            </div>
+            <div class="extra-price">40€</div>
+          </div>
+          <div class="extra-card highlight">
+            <div class="extra-icon">🎁</div>
+            <div class="extra-info">
+              <div class="extra-name">Stages vacances scolaires</div>
+              <div class="extra-detail">Jeunes · Encadrés par moniteur BE</div>
+            </div>
+            <div class="extra-price" style="color: #27ae60;">Gratuit</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ÉQUIPE PÉDAGOGIQUE -->
+  <section class="equipe" id="equipe">
+    <div class="section-inner">
+      <div class="section-label">L'équipe</div>
+      <h2 class="section-title">Nos <em>enseignants</em></h2>
+      <p class="section-desc">Une équipe pédagogique passionnée et diplômée pour vous accompagner à chaque étape.</p>
+      <div class="equipe-grid">
+        <div class="equipe-card">
+          <div class="equipe-avatar a1">AB</div>
+          <div class="equipe-name">Alexandre Begot</div>
+          <div class="equipe-role">Directeur Sportif</div>
+          <div class="equipe-diplome">Brevet d'État · Moniteur de Padel<br>Responsable école de tennis & compétition</div>
+        </div>
+        <div class="equipe-card">
+          <div class="equipe-avatar a2">VB</div>
+          <div class="equipe-name">Vincent Bonvalot</div>
+          <div class="equipe-role">Enseignant tous publics</div>
+          <div class="equipe-diplome">Cours enfants et adultes<br>Suivi personnalisé</div>
+        </div>
+        <div class="equipe-card">
+          <div class="equipe-avatar a3">SR</div>
+          <div class="equipe-name">Samuel Reynaud</div>
+          <div class="equipe-role">Assistant Moniteur</div>
+          <div class="equipe-diplome">Initiateur Fédéral<br>Encadrement école de tennis</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LABELS -->
+  <section class="labels">
+    <div class="section-inner">
+      <div class="section-label">Labels & Certifications</div>
+      <div class="labels-row">
+        <div class="label-item">
+          <img src="images/label-tennis-sante.jpg" alt="Label Tennis Santé" style="height: 56px; object-fit: contain; border-radius: 8px;">
+          <div class="label-text">Label<br>Tennis Santé</div>
+        </div>
+        <div class="label-item">
+          <div class="label-icon">♿</div>
+          <div class="label-text">Accessibilité<br>PMR complète</div>
+        </div>
+        <div class="label-item">
+          <div class="label-icon">🤝</div>
+          <div class="label-text">Économie Sociale<br>et Solidaire</div>
+        </div>
+        <div class="label-item">
+          <div class="label-icon">🎾</div>
+          <div class="label-text">Club affilié<br>FFT</div>
+        </div>
+        <div class="label-item">
+          <div class="label-icon">🎓</div>
+          <div class="label-text">Pass Région<br>accepté</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARTENAIRES -->
+  <section style="padding: 60px 32px; background: var(--blanc);">
+    <div class="section-inner">
+      <div class="section-label">Nos partenaires</div>
+      <h2 class="section-title" style="font-size: 32px; margin-bottom: 40px;">Ils nous <em>soutiennent</em></h2>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap; padding: 24px 0;">
+        <a href="http://www.intersport.fr/" target="_blank" style="text-decoration: none; opacity: 0.7; transition: opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">
+          <img src="images/logo-intersport.png" alt="Intersport Davezieux" style="height: 48px; object-fit: contain;">
+        </a>
+        <a href="http://www.babolat.fr/" target="_blank" style="text-decoration: none; opacity: 0.7; transition: opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">
+          <img src="images/logo-babolat.png" alt="Babolat" style="height: 48px; object-fit: contain;">
+        </a>
+        <a href="http://www.fft.fr" target="_blank" style="text-decoration: none; opacity: 0.7; transition: opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">
+          <img src="images/logo-fft.png" alt="Fédération Française de Tennis" style="height: 56px; object-fit: contain;">
+        </a>
+        <a href="http://www.ligue.fft.fr/dauphine-savoie/" target="_blank" style="text-decoration: none; opacity: 0.7; transition: opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">
+          <img src="images/logo-ligue.png" alt="Ligue Dauphiné Savoie" style="height: 56px; object-fit: contain;">
+        </a>
+        <a href="http://www.comite.fft.fr/drome-ardeche/" target="_blank" style="text-decoration: none; opacity: 0.7; transition: opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">
+          <img src="images/logo-comite.png" alt="Comité Drôme Ardèche" style="height: 56px; object-fit: contain;">
+        </a>
+        <a href="#" style="text-decoration: none; opacity: 0.7; transition: opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">
+          <img src="images/logo-idclub-ligue.png" alt="iDClub Ligue AURA Tennis" style="height: 48px; object-fit: contain;">
+        </a>
+        <a href="http://www.davezieux.fr" target="_blank" style="text-decoration: none; opacity: 0.7; transition: opacity 0.2s; font-size: 16px; font-weight: 700; color: var(--noir); letter-spacing: -0.3px;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">
+          MAIRIE DE DAVÉZIEUX
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="section-inner">
+      <div class="section-label">Nous trouver</div>
+      <h2 class="section-title">Venir au <em>club</em></h2>
+      <p class="section-desc">Complexe sportif de Jossols, au cœur de Davézieux. Courts accessibles de 8h à 22h toute l'année.</p>
+      <div class="contact-grid">
+        <div class="contact-info-list">
+          <div class="contact-item">
+            <div class="contact-item-icon">📍</div>
+            <div>
+              <div class="contact-item-label">Adresse</div>
+              <div class="contact-item-value">Rue des Fonds, Complexe de Jossols<br>07430 Davézieux</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">📞</div>
+            <div>
+              <div class="contact-item-label">Téléphone</div>
+              <div class="contact-item-value">04 75 67 73 72 · 07 81 39 78 02</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">✉️</div>
+            <div>
+              <div class="contact-item-label">Email</div>
+              <div class="contact-item-value"><a href="mailto:tcdavezieuxtennispadel@gmail.com">tcdavezieuxtennispadel@gmail.com</a></div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">🕐</div>
+            <div>
+              <div class="contact-item-label">Horaires courts</div>
+              <div class="contact-item-value">8h – 22h · Toute l'année</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">🅿️</div>
+            <div>
+              <div class="contact-item-label">Accès</div>
+              <div class="contact-item-value">Parking gratuit · Place PMR · Depuis le centre, direction Vernosc-lès-Annonay</div>
+            </div>
+          </div>
+          <div class="contact-item" style="align-items: flex-start;">
+            <div class="contact-item-icon">📱</div>
+            <div>
+              <div class="contact-item-label">App Ten'Up</div>
+              <div class="contact-item-value">Scannez pour réserver un court</div>
+              <img src="images/qr-tenup.png" alt="QR Code Ten'Up" style="width: 120px; margin-top: 8px; border-radius: 8px;">
+            </div>
+          </div>
+        </div>
+        <div class="contact-map">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2812.5!2d4.70339!3d45.251816!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47f5a5d0b0b0b0b0%3A0x0!2sComplexe+sportif+Jossols%2C+Rue+des+Fonds%2C+07430+Dav%C3%A9zieux!5e1!3m2!1sfr!2sfr!4v1"
+            width="100%"
+            height="100%"
+            style="border:0; border-radius: var(--radius-lg);"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-left">
+        <strong>TC Davézieux</strong> · Tennis pour tous depuis 1986<br>
+        <small>Association loi 1901 · SIREN 415 164 821 · Affiliation FFT 50070493</small>
+      </div>
+      <ul class="footer-links">
+        <li><a href="https://tenup.fft.fr/club/50070493/reservations" target="_blank">Ten'Up</a></li>
+        <li><a href="https://www.helloasso.com/associations/tennis-club-davezieux" target="_blank">HelloAsso</a></li>
+        <li><a href="#">Mentions légales</a></li>
+        <li><a href="#">Règlement intérieur</a></li>
+      </ul>
+      <div class="footer-social">
+        <a href="https://www.facebook.com/tcdavezieux.tcd" target="_blank">📘</a>
+        <a href="mailto:tcdavezieuxtennispadel@gmail.com">✉️</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Nav scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Tarifs toggle
+    function showTarifs(type) {
+      document.getElementById('tarifs-adultes').style.display = type === 'adultes' ? 'grid' : 'none';
+      document.getElementById('tarifs-jeunes').style.display = type === 'jeunes' ? 'grid' : 'none';
+      document.querySelectorAll('.tarif-toggle-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase().includes(type));
+      });
+    }
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    // Intersection Observer for fade-in
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.match-card, .install-card, .ecole-card, .tarif-card, .equipe-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'all 0.6s ease';
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+</html>

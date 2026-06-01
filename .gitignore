@@ -1,0 +1,28 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Éditeurs
+.vscode/
+.idea/
+*.swp
+*~
+
+# Dépendances (si on en ajoute un jour)
+node_modules/
+.pnpm-store/
+
+# Build / cache
+.cache/
+dist/
+.vercel/
+.wrangler/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
