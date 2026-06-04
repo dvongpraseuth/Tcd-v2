@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+ * Design tokens TCD — brief §7
+ * Palette terrain & papier + typo Archivo (display) / Hanken (sans)
+ * ============================================================ */
+
+@layer base {
+  :root {
+    /* Couleurs (synchronisées avec tailwind.config.ts) */
+    --ink: #16201c;
+    --paper: #f5f1e8;
+    --paper-dark: #e8e0cc;
+    --court: #1f6b4a;
+    --court-dark: #15523a;
+    --court-light: #2d8c64;
+    --ball: #d8e84a;
+    --flag: #e8a33d;
+
+    /* Rythme typographique */
+    --leading-display: 1.05;
+    --leading-prose: 1.65;
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-hanken), system-ui, sans-serif;
+    line-height: var(--leading-prose);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-archivo), system-ui, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: var(--leading-display);
+    text-transform: uppercase;
+  }
+
+  /* Focus states accessibles */
+  :focus-visible {
+    outline: 2px solid var(--court);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Liens hors composants stylisés */
+  a {
+    color: var(--court-dark);
+    text-decoration-color: var(--ball);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+  a:hover {
+    color: var(--court);
+  }
+}
+
+@layer components {
+  /* Bouton primaire */
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-card px-6 py-3
+           bg-court text-paper font-display uppercase tracking-tight
+           transition-colors hover:bg-court-dark
+           focus-visible:ring-2 focus-visible:ring-ball focus-visible:ring-offset-2;
+  }
+
+  /* Bouton secondaire */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-card px-6 py-3
+           bg-paper-dark text-ink font-display uppercase tracking-tight
+           transition-colors hover:bg-ball
+           focus-visible:ring-2 focus-visible:ring-court focus-visible:ring-offset-2;
+  }
+
+  /* Conteneur largeur lecture */
+  .container-reading {
+    @apply mx-auto px-4 max-w-prose;
+  }
+
+  /* Conteneur largeur page */
+  .container-page {
+    @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl;
+  }
+
+  /* Card papier surélevée */
+  .card-paper {
+    @apply bg-paper rounded-card border border-paper-dark shadow-sm p-6;
+  }
+}
