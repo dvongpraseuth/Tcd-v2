@@ -20,9 +20,15 @@ export function coursEligibles(
   const age = ageAuPeriode(membre.dateNaissance, ref);
 
   return ALL_COURS.filter((c) => {
-    if (c.eligibilite.ageMin !== undefined && age < c.eligibilite.ageMin) return false;
-    if (c.eligibilite.ageMax !== undefined && age > c.eligibilite.ageMax) return false;
-    if (c.eligibilite.sexe !== undefined && c.eligibilite.sexe !== membre.sexe) return false;
+    // Type union des eligibilites — on cast en partial pour accès uniforme
+    const e = c.eligibilite as {
+      ageMin?: number;
+      ageMax?: number;
+      sexe?: Sexe;
+    };
+    if (e.ageMin !== undefined && age < e.ageMin) return false;
+    if (e.ageMax !== undefined && age > e.ageMax) return false;
+    if (e.sexe !== undefined && e.sexe !== membre.sexe) return false;
     return true;
   }).map((c) => ({ key: c.key, label: c.label, prix: c.prix }));
 }

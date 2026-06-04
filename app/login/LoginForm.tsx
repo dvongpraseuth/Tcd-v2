@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import type { Route } from "next";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginForm() {
@@ -25,7 +26,9 @@ export default function LoginForm() {
       setPending(false);
       return;
     }
-    router.push(next);
+    // next vient de searchParams (string libre) — on cast en Route après validation basique
+    const safeNext = (next.startsWith("/") ? next : "/admin") as Route;
+    router.push(safeNext);
     router.refresh();
   }
 

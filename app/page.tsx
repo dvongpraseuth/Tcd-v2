@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Route } from "next";
 
 export default function HomePage() {
   return (
@@ -68,7 +69,7 @@ export default function HomePage() {
   );
 }
 
-function Card({ titre, desc, href }: { titre: string; desc: string; href: string }) {
+function Card({ titre, desc, href }: { titre: string; desc: string; href: Route }) {
   return (
     <Link
       href={href}
