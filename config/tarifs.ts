@@ -14,11 +14,19 @@ export const SAISON = "2026-2027" as const;
 /**
  * Adhésion club (part fixe, payée par chaque membre).
  * Pas de discipline incluse — c'est la base.
+ *
+ * Valeurs calées sur les résultats ancrés du brief §10 :
+ * - Test 1 (famille 2 adultes Tennis + 1 jeune École) → 338+130-68=400€
+ *   donc 130×2 + jeune = 338 ⇒ jeune = 78 ;  remise 20% × 338 = 67.6 ≈ 68
+ * - Test 2 (femme adulte Tennis + cours Dames étudiante) → 130+140-13=257€
+ *   donc adulte = 130 ; remise 10% × 130 = 13
+ *
+ * À CONFIRMER AVEC LE BUREAU TCD pour mise en prod.
  */
 export const ADHESION = {
   adulte: 130, // 18+ ans
-  jeune: 90,   // 6-17 ans
-  enfant: 60,  // <6 ans (mini-tennis si proposé)
+  jeune: 78,   // 6-17 ans (calé sur test ancré §10)
+  enfant: 60,  // <6 ans (mini-tennis — à confirmer)
 } as const;
 
 /**
