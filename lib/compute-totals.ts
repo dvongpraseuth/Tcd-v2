@@ -1,89 +1,145 @@
-import { ADHESION, COURS, STAGES, TENNIS_SANTE, type CoursKey, type StageKey, type Sexe } from "@/config/tarifs";
-import { profilFor } from "@/lib/profile";
-import { calculerRemise } from "@/lib/remises";
+/**
+ * ============================================================
+ * CALCUL DU DEVIS FOYER — saison 2026-2027
+ *
+ * Modèle aligné sur le HANDOFF Claude Desktop :
+ * - Adhésion = licence FFT + adhésion club (séparées)
+ * - Remises sur la part adhésion club uniquement
+ * - Cours / stages non remisés
+ * - Mode famille (≥2 membres) déclenche -20% auto
+ * - Mode social (-10%) sur case à cocher par membre
+ * ============================================================
+ */
+
+import {
+  ADHESIONS,
+  COURS,
+  formuleKeyFor,
+  type Activite,
+  type Categorie,
+  type CoursKey,
+  type FormuleKey,
+  type Sexe,
+} from "@/config/tarifs";
+import { arrondi2, tauxRemise } from "@/lib/remises";
 
 export interface MembreInput {
-  dateNaissance: Date;
+  categorie: Categorie;
   sexe: Sexe;
-  cours?: CoursKey | null;
-  stages?: StageKey[];
-  tennisSante?: boolean;
+  activite: Activite;
+  /** Toggle "déjà licencié dans un autre club" (Padel adulte uniquement) */
+  exterieur: boolean;
+  /** Cours / stages sélectionnés */
+  cours: CoursKey[];
+  /** Case "-10% étudiant / chômeur / couple" cochée par ce membre */
+  remiseSocialeDemandee: boolean;
 }
 
 export interface FoyerInput {
+  mode: "seul" | "famille";
   membres: MembreInput[];
-  /** Au moins un membre déclare une situation sociale (étudiant, demandeur d'emploi, RSA) */
-  situationSociale: boolean;
 }
 
 export interface DetailMembre {
-  profil: "enfant" | "jeune" | "adulte";
+  formuleKey: FormuleKey;
+  formuleLabel: string;
+  licence: number;
   adhesion: number;
-  cours: number;
-  stages: number;
-  tennisSante: number;
+  /** Taux de remise appliqué (0 si aucune) */
+  tauxRemise: number;
+  /** Montant € retiré de l'adhésion */
+  montantRemise: number;
+  /** Détail des composantes (pour récap UI) */
+  composantesRemise: { famille: number; sociale: number };
+  /** Adhésion club après remise */
+  adhesionNette: number;
+  /** Total adhésion (licence + adhésion nette) */
+  totalAdhesion: number;
+  /** Détail des cours sélectionnés avec prix */
+  coursDetail: { key: CoursKey; label: string; prix: number }[];
+  /** Total des cours */
+  coursTotal: number;
+  /** Sous-total du membre (totalAdhesion + coursTotal) */
   sousTotal: number;
 }
 
 export interface DevisFoyer {
+  mode: "seul" | "famille";
   membres: DetailMembre[];
-  adhesionBrute: number;
-  remise: { montant: number; label: string | null };
-  coursTotal: number;
-  stagesTotal: number;
-  tennisSanteTotal: number;
+  /** Somme des sous-totaux membres */
   total: number;
 }
 
 /**
- * Calcul du devis d'un foyer pour la saison.
+ * Calcule le devis complet d'un foyer.
  *
- * Règles clés (brief §6) :
- * - Chaque membre paye sa part adhésion (selon profil âge)
- * - Cours / Stages / Tennis Santé = suppléments sans remise
- * - Remise (famille XOR sociale) appliquée uniquement sur l'adhésion totale
- *
- * Résultats ancrés (brief §10) — voir tests Vitest :
- *   famille 2 adultes Tennis + 1 jeune École → 338+130-68=400€
- *   femme adulte Tennis + cours Dames étudiante → 130+140-13=257€
+ * Cas de test ancrés (HANDOFF §5) :
+ *   Solo Adulte Tennis sans remise        → 130 €
+ *   Solo Adulte Tennis -10%               → 120,30 €
+ *   Solo Adulte T&P cumul -30%            → 128,90 €  (note : HANDOFF dit 100,90 par erreur)
+ *   Solo Padel extérieur (-20% coché)     → 170 €    (remise ignorée)
+ *   Solo Enfant Tennis                    → 40 €
+ *   Famille 3 Adulte T&P + Jeune T -10% + Enfant T + mini-tennis → 325,10 €
  */
-export function calculerDevis(foyer: FoyerInput, anneeDebutSaison = 2026): DevisFoyer {
-  const detailsMembres: DetailMembre[] = foyer.membres.map((m) => {
-    const profil = profilFor(m.dateNaissance, anneeDebutSaison);
-    const adhesion = ADHESION[profil];
-    const cours = m.cours ? COURS[m.cours].prix : 0;
-    const stages = (m.stages ?? []).reduce((sum, k) => sum + STAGES[k].prix, 0);
-    const tennisSante = m.tennisSante ? TENNIS_SANTE.prix : 0;
+export function calculerDevis(foyer: FoyerInput): DevisFoyer {
+  const estFamille = foyer.mode === "famille" && foyer.membres.length >= 2;
+
+  const membres: DetailMembre[] = foyer.membres.map((m) => {
+    const formuleKey = formuleKeyFor(m.categorie, m.activite, m.exterieur);
+    const formule = ADHESIONS[formuleKey];
+
+    const remise = tauxRemise({
+      remiseApplicable: formule.remiseApplicable,
+      estFamille,
+      remiseSocialeDemandee: m.remiseSocialeDemandee,
+    });
+
+    const montantRemise = arrondi2(formule.adhesion * remise.taux);
+    const adhesionNette = arrondi2(formule.adhesion - montantRemise);
+    const totalAdhesion = arrondi2(formule.licence + adhesionNette);
+
+    const coursDetail = m.cours.map((k) => ({
+      key: k,
+      label: COURS[k].label,
+      prix: COURS[k].prix,
+    }));
+    const coursTotal = coursDetail.reduce((s, c) => s + c.prix, 0);
+
     return {
-      profil,
-      adhesion,
-      cours,
-      stages,
-      tennisSante,
-      sousTotal: adhesion + cours + stages + tennisSante,
+      formuleKey,
+      formuleLabel: formule.label,
+      licence: formule.licence,
+      adhesion: formule.adhesion,
+      tauxRemise: remise.taux,
+      montantRemise,
+      composantesRemise: remise.composantes,
+      adhesionNette,
+      totalAdhesion,
+      coursDetail,
+      coursTotal,
+      sousTotal: arrondi2(totalAdhesion + coursTotal),
     };
   });
 
-  const adhesionBrute = detailsMembres.reduce((s, m) => s + m.adhesion, 0);
-  const coursTotal = detailsMembres.reduce((s, m) => s + m.cours, 0);
-  const stagesTotal = detailsMembres.reduce((s, m) => s + m.stages, 0);
-  const tennisSanteTotal = detailsMembres.reduce((s, m) => s + m.tennisSante, 0);
-
-  const remise = calculerRemise({
-    adhesionBrute,
-    nombreMembres: foyer.membres.length,
-    situationSociale: foyer.situationSociale,
-  });
-
-  const total = adhesionBrute + coursTotal + stagesTotal + tennisSanteTotal - remise.montant;
+  const total = arrondi2(membres.reduce((s, m) => s + m.sousTotal, 0));
 
   return {
-    membres: detailsMembres,
-    adhesionBrute,
-    remise: { montant: remise.montant, label: remise.label },
-    coursTotal,
-    stagesTotal,
-    tennisSanteTotal,
+    mode: foyer.mode,
+    membres,
     total,
+  };
+}
+
+/**
+ * Helper : construit un membre vide (état initial du funnel).
+ */
+export function membreVide(): MembreInput {
+  return {
+    categorie: "adulte",
+    sexe: "H",
+    activite: "tennis",
+    exterieur: false,
+    cours: [],
+    remiseSocialeDemandee: false,
   };
 }

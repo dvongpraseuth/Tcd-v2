@@ -1,9 +1,11 @@
 -- ============================================================
 -- TCD — Schéma preinscriptions saison 2026-2027
--- Brief §5 — 2 tables liées + RLS anon insert / auth read+update
+-- Modèle aligné HANDOFF Claude Desktop (catégorie + activité déclarées,
+-- décomposition licence + adhésion, cours multiples par membre)
+-- 2 tables liées + RLS anon insert / auth read+update
 -- ============================================================
 
--- Foyer (1 préinscription = 1 foyer)
+-- ─── Foyer (1 préinscription = 1 foyer) ────────────────────
 create table if not exists public.preinscriptions (
   id                uuid primary key default gen_random_uuid(),
 
@@ -14,23 +16,23 @@ create table if not exists public.preinscriptions (
   ville             text not null,
   adresse           text,
 
-  -- Situation
-  type_inscription  text not null check (type_inscription in ('solo', 'famille')),
-  situation_sociale boolean not null default false,
+  -- Mode
+  mode              text not null check (mode in ('seul', 'famille')),
   notes_libres      text,
 
-  -- Tunnel : Porte A (Ten'Up CB) ou Porte B (paiement local chèque/espèces)
-  porte_choisie     text check (porte_choisie in ('tenup', 'local')),
+  -- Routage initial choisi par le tunnel (info pour stats / analyse)
+  routage_initial   text check (routage_initial in ('simple', 'complexe')),
+
+  -- Incohérences détectées (catégorie déclarée ≠ âge calculé)
+  incoherences      text[],
 
   -- Workflow admin
   statut            text not null default 'en_attente'
-                    check (statut in ('en_attente', 'valide', 'paye', 'refuse')),
+                    check (statut in ('en_attente', 'contacte', 'valide', 'paye', 'refuse')),
   notes_admin       text,
 
-  -- Source de vérité montant (calculé serveur à la soumission, snapshot du devis)
-  total_calcule     integer not null check (total_calcule >= 0),
-  remise_type       text check (remise_type in ('famille', 'sociale')),
-  remise_montant    integer not null default 0 check (remise_montant >= 0),
+  -- Snapshot tarif (calculé serveur à la soumission)
+  total_calcule     numeric(8,2) not null check (total_calcule >= 0),
 
   -- Métadonnées
   saison            text not null default '2026-2027',
@@ -42,37 +44,39 @@ create index if not exists idx_preinscriptions_statut on public.preinscriptions(
 create index if not exists idx_preinscriptions_saison on public.preinscriptions(saison);
 create index if not exists idx_preinscriptions_created_at on public.preinscriptions(created_at desc);
 
--- Membres du foyer (1..N par préinscription)
+-- ─── Membres du foyer (1..N par préinscription) ────────────
 create table if not exists public.preinscription_membres (
-  id                  uuid primary key default gen_random_uuid(),
-  preinscription_id   uuid not null references public.preinscriptions(id) on delete cascade,
+  id                       uuid primary key default gen_random_uuid(),
+  preinscription_id        uuid not null references public.preinscriptions(id) on delete cascade,
 
   -- Identité
-  nom                 text not null,
-  prenom              text not null,
-  date_naissance      date not null,
-  sexe                text not null check (sexe in ('F', 'M', 'X')),
+  nom                      text not null,
+  prenom                   text not null,
+  date_naissance           date not null,
+  sexe                     text not null check (sexe in ('F', 'H')),
 
-  -- Profil calculé côté serveur (cache pour requêtes admin)
-  profil              text not null check (profil in ('enfant', 'jeune', 'adulte')),
+  -- Choix déclarés
+  categorie                text not null check (categorie in ('adulte', 'jeune', 'enfant')),
+  activite                 text not null check (activite in ('tennis', 'padel', 'deux')),
+  exterieur                boolean not null default false,
+  formule_key              text not null,
+  cours                    text[] not null default '{}',
+  remise_sociale_demandee  boolean not null default false,
 
-  -- Choix saison
-  cours               text,
-  stages              text[] not null default '{}',
-  tennis_sante        boolean not null default false,
+  -- Snapshot tarifaire (en €)
+  licence                  numeric(8,2) not null check (licence >= 0),
+  adhesion_brute           numeric(8,2) not null check (adhesion_brute >= 0),
+  montant_remise           numeric(8,2) not null default 0 check (montant_remise >= 0),
+  adhesion_nette           numeric(8,2) not null check (adhesion_nette >= 0),
+  cours_montant            numeric(8,2) not null default 0 check (cours_montant >= 0),
+  sous_total               numeric(8,2) not null check (sous_total >= 0),
 
-  -- Snapshot tarifaire à la soumission
-  adhesion            integer not null check (adhesion >= 0),
-  cours_montant       integer not null default 0 check (cours_montant >= 0),
-  stages_montant      integer not null default 0 check (stages_montant >= 0),
-  tennis_sante_montant integer not null default 0 check (tennis_sante_montant >= 0),
-
-  created_at          timestamptz not null default now()
+  created_at               timestamptz not null default now()
 );
 
 create index if not exists idx_membres_preinscription on public.preinscription_membres(preinscription_id);
 
--- Trigger updated_at auto
+-- ─── Trigger updated_at ────────────────────────────────────
 create or replace function public.set_updated_at()
 returns trigger language plpgsql as $$
 begin
@@ -86,12 +90,12 @@ create trigger trg_preinscriptions_updated_at
   for each row execute function public.set_updated_at();
 
 -- ============================================================
--- RLS — brief §5
+-- RLS — anon insert seul, authenticated lit+update
 -- ============================================================
 alter table public.preinscriptions enable row level security;
 alter table public.preinscription_membres enable row level security;
 
--- ANON : peut INSERT (formulaire public), pas de SELECT
+-- ANON : INSERT seulement (formulaire public), pas de SELECT
 drop policy if exists "anon_insert_preinscriptions" on public.preinscriptions;
 create policy "anon_insert_preinscriptions"
   on public.preinscriptions for insert
@@ -104,7 +108,7 @@ create policy "anon_insert_membres"
   to anon
   with check (true);
 
--- AUTHENTICATED (admin connecté) : SELECT + UPDATE sur les 2 tables
+-- AUTHENTICATED (admin bureau) : full SELECT + UPDATE
 drop policy if exists "auth_select_preinscriptions" on public.preinscriptions;
 create policy "auth_select_preinscriptions"
   on public.preinscriptions for select

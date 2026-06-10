@@ -1,45 +1,60 @@
 import { describe, it, expect } from "vitest";
-import { calculerRemise } from "@/lib/remises";
+import { tauxRemise } from "@/lib/remises";
 
-describe("calculerRemise — famille XOR sociale, non cumulables", () => {
-  it("applique -20% famille dès 2 membres", () => {
-    const r = calculerRemise({
-      adhesionBrute: 338,
-      nombreMembres: 3,
-      situationSociale: false,
+/**
+ * Cumul ADDITIF par défaut (CUMUL_REMISE = "additif" dans config/inscriptions.ts).
+ * À ajuster si le bureau tranche autrement.
+ */
+
+describe("tauxRemise — cumul additif", () => {
+  it("Aucune remise si pas éligible", () => {
+    const r = tauxRemise({
+      remiseApplicable: true,
+      estFamille: false,
+      remiseSocialeDemandee: false,
     });
-    expect(r.type).toBe("famille");
-    expect(r.montant).toBe(68); // 338 × 0.20 = 67.6 → arrondi 68
+    expect(r.taux).toBe(0);
   });
 
-  it("applique -10% sociale si pas éligible famille", () => {
-    const r = calculerRemise({
-      adhesionBrute: 130,
-      nombreMembres: 1,
-      situationSociale: true,
+  it("Famille seule = -20%", () => {
+    const r = tauxRemise({
+      remiseApplicable: true,
+      estFamille: true,
+      remiseSocialeDemandee: false,
     });
-    expect(r.type).toBe("sociale");
-    expect(r.montant).toBe(13);
+    expect(r.taux).toBeCloseTo(0.2, 5);
+    expect(r.composantes.famille).toBe(0.2);
+    expect(r.composantes.sociale).toBe(0);
   });
 
-  it("retient la plus avantageuse (famille) si les 2 éligibles", () => {
-    const r = calculerRemise({
-      adhesionBrute: 300,
-      nombreMembres: 3,
-      situationSociale: true,
+  it("Sociale seule = -10%", () => {
+    const r = tauxRemise({
+      remiseApplicable: true,
+      estFamille: false,
+      remiseSocialeDemandee: true,
     });
-    // famille = 60, sociale = 30 → on prend famille
-    expect(r.type).toBe("famille");
-    expect(r.montant).toBe(60);
+    expect(r.taux).toBeCloseTo(0.1, 5);
   });
 
-  it("aucune remise si pas éligible", () => {
-    const r = calculerRemise({
-      adhesionBrute: 130,
-      nombreMembres: 1,
-      situationSociale: false,
+  it("Famille + Sociale cumul additif = -30%", () => {
+    const r = tauxRemise({
+      remiseApplicable: true,
+      estFamille: true,
+      remiseSocialeDemandee: true,
     });
-    expect(r.type).toBe(null);
-    expect(r.montant).toBe(0);
+    expect(r.taux).toBeCloseTo(0.3, 5);
+    expect(r.composantes.famille).toBe(0.2);
+    expect(r.composantes.sociale).toBe(0.1);
+  });
+
+  it("Membre non remisable (licencié extérieur) = aucune remise même cochée", () => {
+    const r = tauxRemise({
+      remiseApplicable: false,
+      estFamille: true,
+      remiseSocialeDemandee: true,
+    });
+    expect(r.taux).toBe(0);
+    expect(r.composantes.famille).toBe(0);
+    expect(r.composantes.sociale).toBe(0);
   });
 });

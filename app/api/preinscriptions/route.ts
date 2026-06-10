@@ -3,28 +3,25 @@ import { createClient } from "@/lib/supabase/server";
 import { preinscriptionSchema } from "@/app/inscription/schema";
 import { calculerDevis } from "@/lib/compute-totals";
 import { profilFor } from "@/lib/profile";
-import { ADHESION, COURS, STAGES, TENNIS_SANTE } from "@/config/tarifs";
+import { SAISON, formuleKeyFor } from "@/config/tarifs";
 
-export const runtime = "nodejs"; // Fluid Compute (cf vercel knowledge update)
+export const runtime = "nodejs"; // Fluid Compute
 
 /**
  * POST /api/preinscriptions
  *
- * Convention TCD :
  * - Validation Zod stricte
  * - Recalcul serveur du devis (jamais trust client)
+ * - Validation cohérence catégorie déclarée vs date de naissance
  * - Client anon Supabase (RLS active) → policy anon_insert_*
- * - Insertion atomique : preinscription + membres dans la foulée, rollback si membre échoue
+ * - Insertion atomique : préinscription + membres, rollback si membre échoue
  */
 export async function POST(request: NextRequest) {
   let body: unknown;
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json(
-      { error: "JSON invalide" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "JSON invalide" }, { status: 400 });
   }
 
   const parse = preinscriptionSchema.safeParse(body);
@@ -36,16 +33,29 @@ export async function POST(request: NextRequest) {
   }
   const data = parse.data;
 
-  // Recalcul serveur — source de vérité montant
+  // Cohérence catégorie déclarée vs date naissance (warning seulement, pas blocage —
+  // certains cas légitimes : enfant 6 ans pile, jeune 17 ans tardif).
+  const incohérences: string[] = [];
+  for (const [i, m] of data.membres.entries()) {
+    const profilAuto = profilFor(new Date(m.dateNaissance));
+    if (profilAuto !== m.categorie) {
+      incohérences.push(
+        `Membre ${i + 1} (${m.prenom}) : catégorie déclarée "${m.categorie}" diffère de l'âge calculé "${profilAuto}"`,
+      );
+    }
+  }
+
+  // Recalcul serveur
   const devis = calculerDevis({
+    mode: data.mode,
     membres: data.membres.map((m) => ({
-      dateNaissance: new Date(m.dateNaissance),
+      categorie: m.categorie,
       sexe: m.sexe,
-      cours: m.cours ?? null,
-      stages: m.stages,
-      tennisSante: m.tennisSante,
+      activite: m.activite,
+      exterieur: m.exterieur,
+      cours: m.cours,
+      remiseSocialeDemandee: m.remiseSocialeDemandee,
     })),
-    situationSociale: data.situationSociale,
   });
 
   const supabase = await createClient();
@@ -59,18 +69,12 @@ export async function POST(request: NextRequest) {
       code_postal: data.codePostal,
       ville: data.ville,
       adresse: data.adresse ?? null,
-      type_inscription: data.typeInscription,
-      situation_sociale: data.situationSociale,
+      mode: data.mode,
+      routage_initial: data.routageInitial ?? null,
       notes_libres: data.notesLibres ?? null,
-      porte_choisie: data.porteChoisie ?? null,
+      incoherences: incohérences.length > 0 ? incohérences : null,
       total_calcule: devis.total,
-      remise_type: devis.remise.label
-        ? data.situationSociale && devis.adhesionBrute * 0.1 >= devis.remise.montant
-          ? "sociale"
-          : "famille"
-        : null,
-      remise_montant: devis.remise.montant,
-      saison: process.env.NEXT_PUBLIC_SAISON ?? "2026-2027",
+      saison: SAISON,
     })
     .select("id")
     .single();
@@ -84,25 +88,26 @@ export async function POST(request: NextRequest) {
   }
 
   // 2. Insert membres
-  const membresRows = data.membres.map((m) => {
-    const naissance = new Date(m.dateNaissance);
-    const profil = profilFor(naissance, 2026);
-    const coursMontant = m.cours ? COURS[m.cours].prix : 0;
-    const stagesMontant = m.stages.reduce((s, k) => s + STAGES[k].prix, 0);
+  const membresRows = data.membres.map((m, i) => {
+    const detail = devis.membres[i];
     return {
       preinscription_id: preins.id,
       nom: m.nom,
       prenom: m.prenom,
       date_naissance: m.dateNaissance,
       sexe: m.sexe,
-      profil,
-      cours: m.cours ?? null,
-      stages: m.stages,
-      tennis_sante: m.tennisSante,
-      adhesion: ADHESION[profil],
-      cours_montant: coursMontant,
-      stages_montant: stagesMontant,
-      tennis_sante_montant: m.tennisSante ? TENNIS_SANTE.prix : 0,
+      categorie: m.categorie,
+      activite: m.activite,
+      exterieur: m.exterieur,
+      formule_key: formuleKeyFor(m.categorie, m.activite, m.exterieur),
+      cours: m.cours,
+      remise_sociale_demandee: m.remiseSocialeDemandee,
+      licence: detail.licence,
+      adhesion_brute: detail.adhesion,
+      montant_remise: detail.montantRemise,
+      adhesion_nette: detail.adhesionNette,
+      cours_montant: detail.coursTotal,
+      sous_total: detail.sousTotal,
     };
   });
 
@@ -112,7 +117,6 @@ export async function POST(request: NextRequest) {
 
   if (errMembres) {
     console.error("[preinscriptions] insert membres error:", errMembres);
-    // Rollback manuel — Supabase REST ne supporte pas les transactions
     await supabase.from("preinscriptions").delete().eq("id", preins.id);
     return NextResponse.json(
       { error: "Impossible d'enregistrer les membres" },
@@ -120,8 +124,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // TODO P1 : envoi email récap au foyer + notif admin
-  // (utilisera ADMIN_NOTIF_EMAIL côté env)
+  // TODO P1 : envoi email récap au foyer + notif admin (ADMIN_NOTIF_EMAIL)
 
-  return NextResponse.json({ id: preins.id, total: devis.total }, { status: 201 });
+  return NextResponse.json(
+    { id: preins.id, total: devis.total, incohérences },
+    { status: 201 },
+  );
 }

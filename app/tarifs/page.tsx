@@ -1,163 +1,206 @@
 import Link from "next/link";
 import {
   SAISON,
-  ADHESION,
+  ADHESIONS,
   ALL_COURS,
-  ALL_STAGES,
-  TENNIS_SANTE,
   REMISES,
+  type FormuleKey,
 } from "@/config/tarifs";
+import { CLUB_CONTACT, TENUP_OFFRES_URL } from "@/config/inscriptions";
+import { OffreCard } from "@/components/OffreCard";
+import { CoursCard } from "@/components/CoursCard";
 
 export const metadata = {
-  title: "Tarifs",
-  description: `Tarifs de l'adhésion, des cours, des stages et du tennis santé — saison ${SAISON}.`,
+  title: "Offres & tarifs",
+  description: `Toutes les formules d'adhésion, cours, stages et tarifs du club pour la saison ${SAISON}.`,
 };
 
+// Regroupements pour la grille (préserve l'ordre logique de présentation)
+const ADHESIONS_PRINCIPALES: FormuleKey[] = [
+  "adulte_tennis",
+  "adulte_padel",
+  "adulte_deux",
+  "jeune_tennis",
+  "jeune_padel",
+  "jeune_deux",
+  "enfant_tennis",
+];
+const ADHESIONS_SPECIALES: FormuleKey[] = [
+  "exterieur_padel",
+  "adulte_accompagnant",
+];
+
+const FEATURE_KEYS: Set<FormuleKey> = new Set(["adulte_deux", "jeune_deux"]);
+
 export default function TarifsPage() {
-  return (
-    <div className="container-page py-16">
-      <header className="mb-12">
-        <p className="font-display uppercase tracking-tight text-court text-sm mb-2">
-          Saison {SAISON}
-        </p>
-        <h1 className="text-4xl sm:text-5xl mb-4">Tarifs</h1>
-        <p className="text-lg text-ink/70 max-w-2xl">
-          Une adhésion par membre + un supplément cours optionnel. Les remises
-          famille et sociale s'appliquent sur la part adhésion uniquement.
-        </p>
-      </header>
+  const coursTenup = ALL_COURS.filter((c) => c.surTenup);
+  const coursClub = ALL_COURS.filter((c) => !c.surTenup);
 
-      {/* Adhésion */}
-      <section className="mb-12">
-        <h2 className="text-2xl sm:text-3xl mb-6">Adhésion club</h2>
-        <div className="grid gap-4 md:grid-cols-3">
-          <Card
-            titre="Adulte"
-            sousTitre="18 ans et +"
-            prix={ADHESION.adulte}
-          />
-          <Card
-            titre="Jeune"
-            sousTitre="6 à 17 ans"
-            prix={ADHESION.jeune}
-          />
-          <Card
-            titre="Enfant"
-            sousTitre="moins de 6 ans"
-            prix={ADHESION.enfant}
-          />
+  return (
+    <>
+      {/* HERO */}
+      <section className="bg-court text-paper">
+        <div className="container-page py-16 sm:py-20">
+          <p className="font-display uppercase tracking-tight text-ball text-sm mb-4">
+            Saison {SAISON}
+          </p>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl mb-6 max-w-3xl">
+            Toutes les offres du club
+          </h1>
+          <p className="text-base sm:text-lg text-paper/85 max-w-2xl mb-6">
+            Adhésion, cours, stages — tout est inclus sur Ten&apos;Up ou
+            disponible auprès du bureau. Choisissez votre formule, cliquez sur
+            «&nbsp;S&apos;inscrire&nbsp;» et finalisez en ligne ou au club.
+          </p>
+          <p className="text-sm text-paper/70">
+            Tarif tout compris : licence FFT + assurance + accès aux courts avec
+            réservation gratuite.
+          </p>
         </div>
       </section>
 
-      {/* Cours */}
-      <section className="mb-12">
-        <h2 className="text-2xl sm:text-3xl mb-6">Cours collectifs</h2>
-        <div className="grid gap-4 md:grid-cols-2">
-          {ALL_COURS.map((c) => (
-            <Card
-              key={c.key}
-              titre={c.label}
-              sousTitre={eligibiliteLabel(c.eligibilite)}
-              prix={c.prix}
+      {/* ADHÉSIONS PRINCIPALES */}
+      <section className="container-page py-16">
+        <header className="mb-10">
+          <p className="font-display uppercase tracking-tight text-court text-sm mb-2">
+            Étape 1
+          </p>
+          <h2 className="text-3xl sm:text-4xl mb-3">L&apos;adhésion au club</h2>
+          <p className="text-base text-ink/70 max-w-2xl">
+            La base : licence FFT + assurance + accès aux installations.
+            Choisissez votre catégorie (adulte / jeune / enfant) et votre
+            discipline (tennis, padel ou les deux).
+          </p>
+        </header>
+
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {ADHESIONS_PRINCIPALES.map((key) => (
+            <OffreCard
+              key={key}
+              formule={ADHESIONS[key]}
+              feature={FEATURE_KEYS.has(key)}
             />
+          ))}
+        </div>
+
+        {/* Offres spéciales */}
+        <h3 className="text-xl mt-12 mb-6 text-ink/80">Cas particuliers</h3>
+        <div className="grid gap-6 sm:grid-cols-2">
+          {ADHESIONS_SPECIALES.map((key) => (
+            <OffreCard key={key} formule={ADHESIONS[key]} />
           ))}
         </div>
       </section>
 
-      {/* Stages */}
-      <section className="mb-12">
-        <h2 className="text-2xl sm:text-3xl mb-6">Stages vacances</h2>
-        <div className="grid gap-4 md:grid-cols-2">
-          {ALL_STAGES.map((s) => (
-            <Card
-              key={s.key}
-              titre={s.label}
-              sousTitre={eligibiliteLabel(s.eligibilite)}
-              prix={s.prix}
-            />
+      {/* RÉDUCTIONS */}
+      <section className="bg-paper-dark py-14">
+        <div className="container-page">
+          <header className="mb-8">
+            <p className="font-display uppercase tracking-tight text-court text-sm mb-2">
+              Bon à savoir
+            </p>
+            <h2 className="text-3xl sm:text-4xl mb-3">Réductions</h2>
+            <p className="text-base text-ink/70 max-w-2xl">
+              Les remises s&apos;appliquent sur la part adhésion club uniquement
+              (jamais sur la licence FFT ni sur les cours). Cumulables sur
+              justificatif.
+            </p>
+          </header>
+
+          <div className="grid gap-6 sm:grid-cols-2 max-w-3xl">
+            <div className="rounded-card bg-paper border border-paper-dark p-6">
+              <p className="font-display text-5xl text-court mb-2">-20%</p>
+              <p className="font-medium mb-1">{REMISES.famille.label}</p>
+              <p className="text-sm text-ink/60">
+                Appliqué automatiquement dès 2 membres du foyer adhérents.
+              </p>
+            </div>
+            <div className="rounded-card bg-paper border border-paper-dark p-6">
+              <p className="font-display text-5xl text-court mb-2">-10%</p>
+              <p className="font-medium mb-1">{REMISES.social.label}</p>
+              <p className="text-sm text-ink/60">
+                Sur présentation d&apos;un justificatif (carte étudiante,
+                attestation France Travail, etc.).
+              </p>
+            </div>
+          </div>
+
+          <p className="mt-6 text-sm text-ink/60 italic">
+            Pour bénéficier d&apos;une réduction, utilisez la{" "}
+            <Link href="/inscription" className="font-medium text-court-dark">
+              préinscription guidée
+            </Link>{" "}
+            — le club applique la remise lors de la validation.
+          </p>
+        </div>
+      </section>
+
+      {/* COURS & ENSEIGNEMENT */}
+      <section className="container-page py-16">
+        <header className="mb-10">
+          <p className="font-display uppercase tracking-tight text-court text-sm mb-2">
+            Étape 2 — optionnelle
+          </p>
+          <h2 className="text-3xl sm:text-4xl mb-3">Cours & enseignement</h2>
+          <p className="text-base text-ink/70 max-w-2xl">
+            En complément de l&apos;adhésion, choisissez un programme adapté à
+            votre niveau. Encadré par nos moniteurs diplômés. Les cours ne sont
+            pas remisables.
+          </p>
+        </header>
+
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {coursTenup.map((c) => (
+            <CoursCard key={c.key} offre={c} />
+          ))}
+        </div>
+
+        {/* Hors Ten'Up */}
+        <h3 className="text-xl mt-12 mb-3 text-ink/80">
+          Stages & programmes spécifiques
+        </h3>
+        <p className="text-sm text-ink/60 mb-6 max-w-2xl">
+          Ces offres se réservent directement au club (téléphone ou via la
+          préinscription en ligne).
+        </p>
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {coursClub.map((c) => (
+            <CoursCard key={c.key} offre={c} />
           ))}
         </div>
       </section>
 
-      {/* Tennis Santé */}
-      <section className="mb-12">
-        <h2 className="text-2xl sm:text-3xl mb-6">Tennis Santé</h2>
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card
-            titre={TENNIS_SANTE.label}
-            sousTitre="Sur prescription médicale"
-            prix={TENNIS_SANTE.prix}
-          />
+      {/* CTA FINAL */}
+      <section className="bg-court text-paper py-14">
+        <div className="container-page text-center max-w-2xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl mb-4">
+            Vous ne savez pas quelle formule choisir&nbsp;?
+          </h2>
+          <p className="text-paper/85 mb-6">
+            Notre préinscription guidée vous aide à composer la bonne offre en 5
+            minutes — pour vous seul ou toute la famille.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              href="/inscription"
+              className="btn-primary bg-ball text-ink hover:bg-flag"
+            >
+              Préinscription guidée
+            </Link>
+            <a
+              href={TENUP_OFFRES_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-secondary bg-paper/10 text-paper hover:bg-paper/20"
+            >
+              Voir sur Ten&apos;Up →
+            </a>
+          </div>
+          <p className="mt-6 text-sm text-paper/70">
+            Une question&nbsp;? Appelez le {CLUB_CONTACT.telephone}
+          </p>
         </div>
       </section>
-
-      {/* Remises */}
-      <section className="mb-12 card-paper bg-ball/30 border-ball">
-        <h2 className="text-2xl sm:text-3xl mb-4">Remises</h2>
-        <ul className="space-y-3 text-base">
-          <li>
-            <strong className="font-display uppercase tracking-tight text-court">
-              {REMISES.famille.label}
-            </strong>{" "}
-            : −{Math.round(REMISES.famille.taux * 100)} % sur la part adhésion
-            dès {REMISES.famille.seuilMembres} membres dans le foyer.
-          </li>
-          <li>
-            <strong className="font-display uppercase tracking-tight text-court">
-              {REMISES.sociale.label}
-            </strong>{" "}
-            : −{Math.round(REMISES.sociale.taux * 100)} % sur la part adhésion
-            (étudiant, demandeur d'emploi, RSA — justificatif demandé).
-          </li>
-        </ul>
-        <p className="text-sm text-ink/70 mt-4 italic">
-          Les remises ne sont pas cumulables — la plus avantageuse est
-          automatiquement appliquée.
-        </p>
-      </section>
-
-      <div className="text-center pt-8 border-t border-paper-dark">
-        <Link href="/inscription" className="btn-primary">
-          Préinscrire ma famille
-        </Link>
-      </div>
-    </div>
+    </>
   );
-}
-
-interface CardProps {
-  titre: string;
-  sousTitre?: string;
-  prix: number;
-}
-
-function Card({ titre, sousTitre, prix }: CardProps) {
-  return (
-    <div className="card-paper flex items-center justify-between gap-4">
-      <div>
-        <p className="font-display uppercase tracking-tight text-base">{titre}</p>
-        {sousTitre && (
-          <p className="text-sm text-ink/60 mt-1">{sousTitre}</p>
-        )}
-      </div>
-      <p className="font-display text-3xl text-court whitespace-nowrap">
-        {prix}&nbsp;€
-      </p>
-    </div>
-  );
-}
-
-function eligibiliteLabel(e: {
-  ageMin?: number;
-  ageMax?: number;
-  sexe?: "F" | "M" | "X";
-}): string {
-  const parts: string[] = [];
-  if (e.ageMin !== undefined && e.ageMax !== undefined) {
-    parts.push(`${e.ageMin}-${e.ageMax} ans`);
-  } else if (e.ageMin !== undefined) {
-    parts.push(`${e.ageMin} ans et +`);
-  }
-  if (e.sexe === "F") parts.push("féminin");
-  return parts.join(" · ");
 }

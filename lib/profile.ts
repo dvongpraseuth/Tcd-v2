@@ -1,15 +1,19 @@
-import type { ProfilAge } from "@/config/tarifs";
+import type { Categorie } from "@/config/tarifs";
 
 /**
- * Détermine la tranche d'âge officielle TCD à partir d'une date de naissance.
+ * Détermine la catégorie officielle TCD à partir d'une date de naissance.
  * Référence de calcul : 1er septembre de l'année de saison.
  *
- * Brief §9 — hypothèse confirmée par défaut : "6 ans révolus = jeune".
- * Bord-de-règle 18 ans : adulte le jour des 18 ans (au 1er sept).
+ * Utilisé côté API pour validation cohérence catégorie déclarée vs âge réel
+ * (le funnel demande la catégorie directement, mais le formulaire de fiche
+ * complexe collecte la date de naissance pour archive bureau).
  *
- * À ajuster avec Séb Roux quand le bureau aura tranché (cf bloqueurs §9).
+ * Brief §9 — hypothèses retenues par défaut :
+ * - < 6 ans = enfant
+ * - 6 à 17 ans = jeune
+ * - 18+ ans = adulte (le jour des 18 ans au 1er sept)
  */
-export function profilFor(dateNaissance: Date, anneeDebutSaison = 2026): ProfilAge {
+export function profilFor(dateNaissance: Date, anneeDebutSaison = 2026): Categorie {
   const ref = new Date(anneeDebutSaison, 8, 1); // 1er septembre AAAA
   const age = ageAuPeriode(dateNaissance, ref);
 

@@ -1,34 +1,41 @@
 import { describe, it, expect } from "vitest";
 import { coursEligibles } from "@/lib/eligibilite-cours";
 
-describe("coursEligibles — filtrage par âge et sexe", () => {
-  it("propose École + Compétition à un jeune de 14 ans", () => {
-    const keys = coursEligibles(
-      { dateNaissance: new Date("2012-04-10"), sexe: "M" },
-      2026,
-    ).map((c) => c.key);
-    expect(keys).toContain("ecole_tennis");
-    expect(keys).toContain("competition");
-    expect(keys).not.toContain("cours_adulte");
-    expect(keys).not.toContain("cours_dames");
+describe("coursEligibles — filtrage par catégorie et sexe", () => {
+  it("Enfant : seulement mini-tennis (catégorie 'enfant')", () => {
+    const cours = coursEligibles("enfant", "F").map((c) => c.key);
+    expect(cours).toContain("mini_tennis");
+    // Et pas les cours adultes ni jeunes spécifiques
+    expect(cours).not.toContain("cours_dame");
+    expect(cours).not.toContain("cours_homme");
+    expect(cours).not.toContain("ecole_tennis");
   });
 
-  it("propose Cours adulte + Cours dames à une femme adulte", () => {
-    const keys = coursEligibles(
-      { dateNaissance: new Date("1995-06-20"), sexe: "F" },
-      2026,
-    ).map((c) => c.key);
-    expect(keys).toContain("cours_adulte");
-    expect(keys).toContain("cours_dames");
-    expect(keys).not.toContain("ecole_tennis");
+  it("Jeune : galaxie, école, pôles, tennis santé jeunes", () => {
+    const cours = coursEligibles("jeune", "H").map((c) => c.key);
+    expect(cours).toContain("galaxie_tennis");
+    expect(cours).toContain("ecole_tennis");
+    expect(cours).toContain("pole_espoirs");
+    expect(cours).toContain("pole_competition");
+    expect(cours).toContain("tennis_sante_jeunes");
+    expect(cours).not.toContain("cours_homme");
+    expect(cours).not.toContain("cours_dame");
   });
 
-  it("ne propose PAS Cours dames à un homme adulte", () => {
-    const keys = coursEligibles(
-      { dateNaissance: new Date("1985-01-01"), sexe: "M" },
-      2026,
-    ).map((c) => c.key);
-    expect(keys).toContain("cours_adulte");
-    expect(keys).not.toContain("cours_dames");
+  it("Adulte Femme : cours dame, tennis santé adulte, stages, PAS cours homme", () => {
+    const cours = coursEligibles("adulte", "F").map((c) => c.key);
+    expect(cours).toContain("cours_dame");
+    expect(cours).toContain("tennis_sante_coeur");
+    expect(cours).toContain("tennis_sante_adultes");
+    expect(cours).toContain("stage_padel"); // null cible = ouvert à tous
+    expect(cours).not.toContain("cours_homme");
+  });
+
+  it("Adulte Homme : cours homme, tennis santé adulte, stages, PAS cours dame", () => {
+    const cours = coursEligibles("adulte", "H").map((c) => c.key);
+    expect(cours).toContain("cours_homme");
+    expect(cours).toContain("tennis_sante_coeur");
+    expect(cours).toContain("stage_padel");
+    expect(cours).not.toContain("cours_dame");
   });
 });

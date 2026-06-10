@@ -1,60 +1,79 @@
+/**
+ * ============================================================
+ * REMISES — calcul des taux et montants
+ *
+ * Règles (HANDOFF Claude Desktop) :
+ * - Remise s'applique UNIQUEMENT sur la part adhésion club
+ * - Famille (-20%) appliquée AUTOMATIQUEMENT si ≥ 2 membres dans le foyer
+ * - Sociale (-10%) sur case à cocher par membre + justificatif
+ * - Bloquée pour licencié extérieur (formule.remiseApplicable = false)
+ * - Mode de cumul : voir CUMUL_REMISE dans config/inscriptions.ts
+ * ============================================================
+ */
+
 import { REMISES } from "@/config/tarifs";
+import { CUMUL_REMISE, type ModeCumulRemise } from "@/config/inscriptions";
 
 export interface ContexteRemise {
-  /** Total adhésion brute du foyer (somme des parts adhésion AVANT remise) */
-  adhesionBrute: number;
-  /** Nombre de membres dans le foyer */
-  nombreMembres: number;
-  /** Si au moins un membre déclare une situation sociale (étudiant, RSA, etc.) */
-  situationSociale: boolean;
+  /** Membre éligible aux remises (false pour licencié extérieur) */
+  remiseApplicable: boolean;
+  /** Mode famille actif (≥ 2 membres dans le foyer) */
+  estFamille: boolean;
+  /** Le membre a coché la remise sociale (étudiant / chômeur / etc.) */
+  remiseSocialeDemandee: boolean;
 }
 
 export interface ResultatRemise {
-  /** Montant en € à déduire de l'adhésion brute */
-  montant: number;
-  /** Type de remise appliqué (null si aucune) */
-  type: "famille" | "sociale" | null;
-  /** Libellé humain pour récap UI */
-  label: string | null;
+  /** Taux total de remise (entre 0 et ~0.30) */
+  taux: number;
+  /** Détail des composantes appliquées */
+  composantes: {
+    famille: number;
+    sociale: number;
+  };
+  /** Mode de cumul utilisé pour info / debug */
+  mode: ModeCumulRemise;
 }
 
 /**
- * Calcule la remise applicable sur la part adhésion uniquement.
- *
- * Brief §6 — règles :
- * - Famille : -20% si ≥2 membres dans le foyer
- * - Sociale : -10% sur justificatif
- * - NON CUMULABLES → on retient la plus avantageuse
- *
- * Arrondi à l'euro entier (cohérent avec les résultats ancrés §10 :
- * 338 × 0.20 = 67.6 → 68).
+ * Calcule le TAUX de remise pour un membre selon son contexte.
+ * Le montant en € se calcule ensuite par : adhesionClub × taux.
  */
-export function calculerRemise(ctx: ContexteRemise): ResultatRemise {
-  const peutFamille = ctx.nombreMembres >= REMISES.famille.seuilMembres;
-  const peutSociale = ctx.situationSociale;
-
-  const montantFamille = peutFamille
-    ? Math.round(ctx.adhesionBrute * REMISES.famille.taux)
-    : 0;
-  const montantSociale = peutSociale
-    ? Math.round(ctx.adhesionBrute * REMISES.sociale.taux)
-    : 0;
-
-  if (montantFamille === 0 && montantSociale === 0) {
-    return { montant: 0, type: null, label: null };
-  }
-
-  // Non cumulables : on prend la plus avantageuse pour le foyer
-  if (montantFamille >= montantSociale) {
+export function tauxRemise(ctx: ContexteRemise): ResultatRemise {
+  if (!ctx.remiseApplicable) {
     return {
-      montant: montantFamille,
-      type: "famille",
-      label: REMISES.famille.label,
+      taux: 0,
+      composantes: { famille: 0, sociale: 0 },
+      mode: CUMUL_REMISE,
     };
   }
+
+  const famille = ctx.estFamille ? REMISES.famille.taux : 0;
+  const sociale = ctx.remiseSocialeDemandee ? REMISES.social.taux : 0;
+
+  let taux: number;
+  switch (CUMUL_REMISE) {
+    case "additif":
+      taux = famille + sociale;
+      break;
+    case "multiplicatif":
+      taux = 1 - (1 - famille) * (1 - sociale);
+      break;
+    case "noncumulable":
+      taux = Math.max(famille, sociale);
+      break;
+  }
+
   return {
-    montant: montantSociale,
-    type: "sociale",
-    label: REMISES.sociale.label,
+    taux,
+    composantes: { famille, sociale },
+    mode: CUMUL_REMISE,
   };
+}
+
+/**
+ * Arrondi monétaire à 2 décimales (pour les montants en €).
+ */
+export function arrondi2(montant: number): number {
+  return Math.round(montant * 100) / 100;
 }

@@ -1,97 +1,176 @@
 import { describe, it, expect } from "vitest";
-import { calculerDevis } from "@/lib/compute-totals";
+import { calculerDevis, type FoyerInput } from "@/lib/compute-totals";
 
 /**
  * ============================================================
- * RÉSULTATS ANCRÉS — brief §10
- * Ces 2 tests sont la source de vérité pour les valeurs
- * de config/tarifs.ts. Si ils cassent, c'est le code OU les
- * tarifs qui ont divergé du brief — pas le test.
+ * MATRICE QA — cas validés bureau (questions-club-et-cas-tests.md PARTIE B)
+ * Cumul des remises : ADDITIF par défaut (HANDOFF Claude Desktop §3)
+ *   famille (-20%) + sociale (-10%) = -30% sur l'adhésion club
  * ============================================================
  */
 
-describe("calculerDevis — résultats ancrés brief §10", () => {
-  it("famille 2 adultes Tennis + 1 jeune École → 338+130-68=400€", () => {
-    const devis = calculerDevis(
-      {
-        membres: [
-          // Adulte 1 — pas de cours
-          { dateNaissance: new Date("1985-01-01"), sexe: "M" },
-          // Adulte 2 — pas de cours
-          { dateNaissance: new Date("1987-06-15"), sexe: "F" },
-          // Jeune — cours École de tennis
-          { dateNaissance: new Date("2014-03-10"), sexe: "M", cours: "ecole_tennis" },
-        ],
-        situationSociale: false,
-      },
-      2026,
-    );
+const adulteH: FoyerInput["membres"][number] = {
+  categorie: "adulte",
+  sexe: "H",
+  activite: "tennis",
+  exterieur: false,
+  cours: [],
+  remiseSocialeDemandee: false,
+};
 
-    expect(devis.adhesionBrute).toBe(338); // 130 + 130 + 78
-    expect(devis.coursTotal).toBe(130);    // École de tennis
-    expect(devis.remise.montant).toBe(68); // 20% famille sur 338
-    expect(devis.remise.label).toBeTruthy();
-    expect(devis.total).toBe(400);
+describe("calculerDevis — matrice QA solo", () => {
+  it("S1 Adulte Tennis sans remise → 130 €", () => {
+    const d = calculerDevis({ mode: "seul", membres: [{ ...adulteH }] });
+    expect(d.total).toBe(130);
+    expect(d.membres[0].licence).toBe(33);
+    expect(d.membres[0].adhesion).toBe(97);
+    expect(d.membres[0].montantRemise).toBe(0);
   });
 
-  it("femme adulte Tennis + cours Dames étudiante → 130+140-13=257€", () => {
-    const devis = calculerDevis(
-      {
-        membres: [
-          {
-            dateNaissance: new Date("1998-09-22"),
-            sexe: "F",
-            cours: "cours_dames",
-          },
-        ],
-        situationSociale: true, // étudiante = tarif social
-      },
-      2026,
-    );
+  it("S2 Adulte T&P -10% étudiant → 156,30 €", () => {
+    const d = calculerDevis({
+      mode: "seul",
+      membres: [
+        { ...adulteH, activite: "deux", remiseSocialeDemandee: true },
+      ],
+    });
+    expect(d.total).toBe(156.3); // 33 + 137*0.9 = 33 + 123.30
+    expect(d.membres[0].montantRemise).toBe(13.7); // 137*0.10
+  });
 
-    expect(devis.adhesionBrute).toBe(130);
-    expect(devis.coursTotal).toBe(140);
-    expect(devis.remise.montant).toBe(13); // 10% sociale sur 130
-    expect(devis.total).toBe(257);
+  it("S3 Solo : la remise -20% famille n'est PAS appliquée", () => {
+    const d = calculerDevis({
+      mode: "seul",
+      membres: [{ ...adulteH }],
+    });
+    expect(d.membres[0].composantesRemise.famille).toBe(0);
+  });
+
+  it("S4 Jeune Padel + cours Galaxie 120€ → 205 €", () => {
+    const d = calculerDevis({
+      mode: "seul",
+      membres: [
+        {
+          categorie: "jeune",
+          sexe: "H",
+          activite: "padel",
+          exterieur: false,
+          cours: ["galaxie_tennis"],
+          remiseSocialeDemandee: false,
+        },
+      ],
+    });
+    expect(d.total).toBe(205); // 23 + 62 + 120
+    expect(d.membres[0].coursTotal).toBe(120); // cours non remisés
+  });
+
+  it("S5 Enfant -6 ans Tennis → 40 €", () => {
+    const d = calculerDevis({
+      mode: "seul",
+      membres: [
+        {
+          categorie: "enfant",
+          sexe: "F",
+          activite: "tennis",
+          exterieur: false,
+          cours: [],
+          remiseSocialeDemandee: false,
+        },
+      ],
+    });
+    expect(d.total).toBe(40); // 13 + 27
+  });
+
+  it("S7 Adulte Padel licencié extérieur → 170 €, remise ignorée", () => {
+    const d = calculerDevis({
+      mode: "seul",
+      membres: [
+        {
+          ...adulteH,
+          activite: "padel",
+          exterieur: true,
+          remiseSocialeDemandee: true, // tente la remise sociale
+        },
+      ],
+    });
+    expect(d.total).toBe(170);
+    expect(d.membres[0].montantRemise).toBe(0); // remise bloquée
+    expect(d.membres[0].licence).toBe(0); // pas de licence
+  });
+});
+
+describe("calculerDevis — matrice QA famille", () => {
+  it("F1 Famille 3 : Adulte T&P + Jeune Tennis(-10%) + Enfant Tennis + mini-tennis → 325,10 €", () => {
+    const d = calculerDevis({
+      mode: "famille",
+      membres: [
+        // M1 : Adulte T&P, pas de cours
+        {
+          categorie: "adulte",
+          sexe: "H",
+          activite: "deux",
+          exterieur: false,
+          cours: [],
+          remiseSocialeDemandee: false,
+        },
+        // M2 : Jeune Tennis avec -10% étudiant
+        {
+          categorie: "jeune",
+          sexe: "H",
+          activite: "tennis",
+          exterieur: false,
+          cours: [],
+          remiseSocialeDemandee: true,
+        },
+        // M3 : Enfant Tennis + mini-tennis
+        {
+          categorie: "enfant",
+          sexe: "F",
+          activite: "tennis",
+          exterieur: false,
+          cours: ["mini_tennis"],
+          remiseSocialeDemandee: false,
+        },
+      ],
+    });
+
+    expect(d.membres[0].sousTotal).toBe(142.6); // 33 + 137 - 27.40
+    expect(d.membres[1].sousTotal).toBe(62.9); // 23 + 57 - 17.10
+    expect(d.membres[2].sousTotal).toBe(119.6); // 13 + 27 - 5.40 + 85
+    expect(d.total).toBe(325.1);
+  });
+
+  it("F6 Total foyer = somme des sous-totaux", () => {
+    const d = calculerDevis({
+      mode: "famille",
+      membres: [
+        { ...adulteH, activite: "tennis" },
+        { ...adulteH, sexe: "F", activite: "padel" },
+      ],
+    });
+    const sommeManuelle =
+      d.membres.reduce((s, m) => s + m.sousTotal, 0);
+    expect(d.total).toBe(sommeManuelle);
   });
 });
 
 describe("calculerDevis — cas de bord", () => {
-  it("totalise correctement adhésion + cours + stages + tennis santé sans remise", () => {
-    const devis = calculerDevis(
-      {
-        membres: [
-          {
-            dateNaissance: new Date("1990-05-05"),
-            sexe: "M",
-            cours: "cours_adulte",
-            stages: ["stage_adulte"],
-            tennisSante: false,
-          },
-        ],
-        situationSociale: false,
-      },
-      2026,
+  it("Solo sans cours : sousTotal = licence + adhésion", () => {
+    const d = calculerDevis({ mode: "seul", membres: [{ ...adulteH }] });
+    expect(d.membres[0].sousTotal).toBe(
+      d.membres[0].licence + d.membres[0].adhesionNette,
     );
-    expect(devis.adhesionBrute).toBe(130);
-    expect(devis.coursTotal).toBe(180);
-    expect(devis.stagesTotal).toBe(60);
-    expect(devis.remise.montant).toBe(0);
-    expect(devis.total).toBe(370);
   });
 
-  it("enfant <6 ans : adhésion enfant 60€, pas de cours", () => {
-    const devis = calculerDevis(
-      {
-        membres: [
-          { dateNaissance: new Date("2022-04-10"), sexe: "F" },
-        ],
-        situationSociale: false,
-      },
-      2026,
-    );
-    expect(devis.membres[0].profil).toBe("enfant");
-    expect(devis.membres[0].adhesion).toBe(60);
-    expect(devis.total).toBe(60);
+  it("Famille 2 membres = mode famille actif → -20% sur chacun", () => {
+    const d = calculerDevis({
+      mode: "famille",
+      membres: [
+        { ...adulteH },
+        { ...adulteH, sexe: "F" },
+      ],
+    });
+    expect(d.membres[0].composantesRemise.famille).toBe(0.2);
+    expect(d.membres[1].composantesRemise.famille).toBe(0.2);
   });
 });

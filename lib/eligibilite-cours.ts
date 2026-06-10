@@ -1,34 +1,46 @@
-import { ALL_COURS, type CoursKey, type Sexe } from "@/config/tarifs";
-import { ageAuPeriode } from "@/lib/profile";
+/**
+ * ============================================================
+ * ÉLIGIBILITÉ COURS — filtre la liste des cours offerts à un membre.
+ *
+ * Modèle Claude Desktop : on filtre par catégorie (avec genre pour adultes).
+ * Pas de calcul d'âge depuis date de naissance — la catégorie est déclarée
+ * directement par l'utilisateur dans le funnel.
+ * ============================================================
+ */
 
-interface CritereProfil {
-  dateNaissance: Date;
-  sexe: Sexe;
+import { ALL_COURS, cibleCoursFor, type Categorie, type Sexe } from "@/config/tarifs";
+
+export interface CoursEligible {
+  key: string;
+  label: string;
+  description: string;
+  prix: number;
+  /** Disponible sur Ten'Up pour deep-link (ou hors-Ten'Up = handoff club) */
+  surTenup: boolean;
 }
 
 /**
- * Retourne la liste des cours auxquels un membre est éligible
- * en fonction de son âge (au 1er sept de la saison) et de son sexe.
- *
- * Brief §6 — règles d'éligibilité posées dans config/tarifs.ts
+ * Retourne les cours éligibles pour un membre selon sa catégorie + sexe.
  */
 export function coursEligibles(
-  membre: CritereProfil,
-  anneeDebutSaison = 2026,
-): { key: CoursKey; label: string; prix: number }[] {
-  const ref = new Date(anneeDebutSaison, 8, 1);
-  const age = ageAuPeriode(membre.dateNaissance, ref);
+  categorie: Categorie,
+  sexe: Sexe,
+): CoursEligible[] {
+  const cible = cibleCoursFor(categorie, sexe);
 
   return ALL_COURS.filter((c) => {
-    // Type union des eligibilites — on cast en partial pour accès uniforme
-    const e = c.eligibilite as {
-      ageMin?: number;
-      ageMax?: number;
-      sexe?: Sexe;
-    };
-    if (e.ageMin !== undefined && age < e.ageMin) return false;
-    if (e.ageMax !== undefined && age > e.ageMax) return false;
-    if (e.sexe !== undefined && e.sexe !== membre.sexe) return false;
-    return true;
-  }).map((c) => ({ key: c.key, label: c.label, prix: c.prix }));
+    // null = ouvert à tous (genre "stage padel")
+    if (c.cibleCategorie === null) return true;
+
+    // Cours adulte non-genrés (genre "tennis santé adulte")
+    if (c.cibleCategorie === "adulte" && categorie === "adulte") return true;
+
+    return c.cibleCategorie === cible;
+  }).map((c) => ({
+    key: c.key,
+    label: c.label,
+    description: c.description,
+    prix: c.prix,
+    surTenup: c.surTenup,
+  }));
 }
