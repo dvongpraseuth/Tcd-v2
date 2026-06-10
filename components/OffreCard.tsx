@@ -28,51 +28,51 @@ export function OffreCard({ formule, feature = false }: Props) {
 
   return (
     <article
-      className={`flex flex-col rounded-card border bg-paper p-6 ${
-        feature ? "border-flag shadow-md" : "border-paper-dark"
+      className={`flex flex-col rounded-card border bg-blanc p-6 ${
+        feature ? "border-jaune shadow-md" : "border-gris-200"
       }`}
     >
       <header className="mb-4">
         {feature && (
-          <span className="inline-block bg-flag text-paper font-display uppercase tracking-tight text-xs px-2 py-0.5 rounded mb-2">
+          <span className="inline-block bg-jaune text-blanc font-sans uppercase tracking-tight text-xs px-2 py-0.5 rounded mb-2">
             Le plus avantageux
           </span>
         )}
-        <h3 className="text-xl mb-1 text-court">{formule.label}</h3>
+        <h3 className="text-xl mb-1 text-bleu">{formule.label}</h3>
         {conditionsTexte && (
-          <p className="text-xs font-medium text-ink/60 uppercase tracking-tight">
+          <p className="text-xs font-medium text-gris-700 uppercase tracking-tight">
             {conditionsTexte}
           </p>
         )}
       </header>
 
-      <p className="text-sm text-ink/70 mb-4 flex-grow">{formule.description}</p>
+      <p className="text-sm text-gris-700 mb-4 flex-grow">{formule.description}</p>
 
-      <div className="border-t border-paper-dark pt-4 mb-4">
+      <div className="border-t border-gris-200 pt-4 mb-4">
         <dl className="text-sm space-y-1 mb-2">
           {formule.licence > 0 && (
-            <div className="flex justify-between text-ink/60">
+            <div className="flex justify-between text-gris-700">
               <dt>Licence FFT + assurance</dt>
               <dd>{formule.licence} €</dd>
             </div>
           )}
-          <div className="flex justify-between text-ink/60">
+          <div className="flex justify-between text-gris-700">
             <dt>Adhésion club</dt>
             <dd>{formule.adhesion} €</dd>
           </div>
         </dl>
-        <div className="flex justify-between items-baseline pt-2 border-t border-dashed border-paper-dark">
-          <span className="font-display uppercase tracking-tight text-sm">
+        <div className="flex justify-between items-baseline pt-2 border-t border-dashed border-gris-200">
+          <span className="font-sans uppercase tracking-tight text-sm">
             Total
           </span>
-          <span className="font-display text-3xl text-court">
+          <span className="font-sans text-3xl text-bleu">
             {formule.total} €
           </span>
         </div>
       </div>
 
       {!formule.remiseApplicable && (
-        <p className="text-xs text-flag mb-3">
+        <p className="text-xs text-jaune mb-3">
           Aucune remise applicable sur cette formule.
         </p>
       )}

@@ -242,8 +242,8 @@ export default function InscriptionForm() {
   if (submitState.kind === "ok") {
     return (
       <div className="container-page py-16 max-w-xl">
-        <div className="rounded-card bg-paper border-2 border-court p-8 text-center">
-          <h1 className="text-3xl mb-4 text-court">
+        <div className="rounded-card bg-blanc border-2 border-bleu p-8 text-center">
+          <h1 className="text-3xl mb-4 text-bleu">
             Préinscription reçue&nbsp;!
           </h1>
           <p className="text-lg mb-6">
@@ -252,10 +252,10 @@ export default function InscriptionForm() {
             Un membre vous recontacte sous 48 h pour finaliser
             l&apos;inscription.
           </p>
-          <p className="font-display text-4xl text-court mb-2">
+          <p className="font-sans text-4xl text-bleu mb-2">
             {submitState.total.toFixed(2)} €
           </p>
-          <p className="text-sm text-ink/60 mb-6">
+          <p className="text-sm text-gris-700 mb-6">
             Estimation — montant final confirmé par le club selon vos
             justificatifs.
           </p>
@@ -270,7 +270,7 @@ export default function InscriptionForm() {
   return (
     <div className="container-page py-8 sm:py-12 max-w-2xl">
       <header className="mb-8">
-        <p className="font-display uppercase tracking-tight text-court text-sm mb-1">
+        <p className="font-sans uppercase tracking-tight text-bleu text-sm mb-1">
           Saison 2026-2027
         </p>
         <h1 className="text-3xl sm:text-4xl">Préinscription guidée</h1>
@@ -281,14 +281,14 @@ export default function InscriptionForm() {
           <div
             key={i}
             className={`flex-1 h-1.5 rounded-full transition-colors ${
-              i <= currentPos ? "bg-court" : "bg-paper-dark"
+              i <= currentPos ? "bg-bleu" : "bg-gris-100"
             }`}
           />
         ))}
-        {onCoordsScreen && <div className="flex-1 h-1.5 rounded-full bg-court" />}
+        {onCoordsScreen && <div className="flex-1 h-1.5 rounded-full bg-bleu" />}
       </div>
 
-      <div className="rounded-card bg-paper border border-paper-dark p-6 sm:p-8 min-h-[300px]">
+      <div className="rounded-card bg-blanc border border-gris-200 p-6 sm:p-8 min-h-[300px]">
         {onCoordsScreen ? (
           <ScreenCoords
             coords={coords}
@@ -354,9 +354,9 @@ export default function InscriptionForm() {
       </div>
 
       <div className="mt-6 flex items-center justify-between gap-4">
-        <div className="text-sm text-ink/60">
+        <div className="text-sm text-gris-700">
           Total estimé
-          <span className="block font-display text-2xl text-court">
+          <span className="block font-sans text-2xl text-bleu">
             {devis ? `${devis.total.toFixed(2)} €` : "—"}
           </span>
         </div>
@@ -395,10 +395,10 @@ function ScreenMode({
 }) {
   return (
     <div>
-      <h2 className="text-2xl text-court mb-2">
+      <h2 className="text-2xl text-bleu mb-2">
         Vous vous inscrivez seul ou en famille&nbsp;?
       </h2>
-      <p className="text-sm text-ink/60 mb-6">
+      <p className="text-sm text-gris-700 mb-6">
         La famille (2 membres et +) ouvre droit à -20% sur les adhésions.
       </p>
       <div className="grid gap-3">
@@ -410,7 +410,7 @@ function ScreenMode({
           onClick={() => onSelect("famille")}
         >
           <strong>Famille</strong>
-          <span className="block text-sm text-ink/60">
+          <span className="block text-sm text-gris-700">
             Plusieurs membres · -20% appliqué automatiquement
           </span>
         </Choice>
@@ -428,8 +428,8 @@ function ScreenCount({
 }) {
   return (
     <div>
-      <h2 className="text-2xl text-court mb-2">Combien de personnes&nbsp;?</h2>
-      <p className="text-sm text-ink/60 mb-6">
+      <h2 className="text-2xl text-bleu mb-2">Combien de personnes&nbsp;?</h2>
+      <p className="text-sm text-gris-700 mb-6">
         On enregistrera chaque membre l&apos;un après l&apos;autre.
       </p>
       <div className="grid grid-cols-5 gap-2">
@@ -437,10 +437,10 @@ function ScreenCount({
           <button
             key={n}
             onClick={() => onSelect(n)}
-            className={`py-4 rounded-card border-2 font-display text-xl transition-colors ${
+            className={`py-4 rounded-card border-2 font-sans text-xl transition-colors ${
               count === n
-                ? "bg-court text-paper border-court"
-                : "bg-paper border-paper-dark hover:border-court"
+                ? "bg-bleu text-blanc border-bleu"
+                : "bg-blanc border-gris-200 hover:border-bleu"
             }`}
           >
             {n}
@@ -465,12 +465,12 @@ function ScreenCat({
   return (
     <div>
       {total > 1 && (
-        <p className="text-xs font-display uppercase tracking-tight text-court mb-2">
+        <p className="text-xs font-sans uppercase tracking-tight text-bleu mb-2">
           Membre {mIndex + 1} sur {total}
         </p>
       )}
-      <h2 className="text-2xl text-court mb-2">Catégorie d&apos;âge</h2>
-      <p className="text-sm text-ink/60 mb-6">
+      <h2 className="text-2xl text-bleu mb-2">Catégorie d&apos;âge</h2>
+      <p className="text-sm text-gris-700 mb-6">
         Le genre sert à proposer les bons cours (Dame / Homme).
       </p>
       <div className="grid gap-3 mb-6">
@@ -494,7 +494,7 @@ function ScreenCat({
             }
           >
             <strong>{t}</strong>
-            <span className="block text-sm text-ink/60">{d}</span>
+            <span className="block text-sm text-gris-700">{d}</span>
           </Choice>
         ))}
       </div>
@@ -533,23 +533,23 @@ function ScreenAct({
     return (
       <div>
         {total > 1 && (
-          <p className="text-xs font-display uppercase tracking-tight text-court mb-2">
+          <p className="text-xs font-sans uppercase tracking-tight text-bleu mb-2">
             Membre {mIndex + 1} sur {total}
           </p>
         )}
-        <h2 className="text-2xl text-court mb-2">Adhésion enfant</h2>
-        <p className="text-sm text-ink/60 mb-6">
+        <h2 className="text-2xl text-bleu mb-2">Adhésion enfant</h2>
+        <p className="text-sm text-gris-700 mb-6">
           Pour les moins de 6 ans, seule l&apos;offre Tennis est disponible.
         </p>
         <Choice selected onClick={() => onPatch({ activite: "tennis" })}>
           <div className="flex items-baseline justify-between">
             <span>
               <strong>Tennis</strong>
-              <span className="block text-sm text-ink/60">
+              <span className="block text-sm text-gris-700">
                 licence + assurance + accès courts
               </span>
             </span>
-            <span className="font-display text-xl text-court">
+            <span className="font-sans text-xl text-bleu">
               {fk.total} €
             </span>
           </div>
@@ -566,12 +566,12 @@ function ScreenAct({
   return (
     <div>
       {total > 1 && (
-        <p className="text-xs font-display uppercase tracking-tight text-court mb-2">
+        <p className="text-xs font-sans uppercase tracking-tight text-bleu mb-2">
           Membre {mIndex + 1} sur {total}
         </p>
       )}
-      <h2 className="text-2xl text-court mb-2">Adhésion + licence</h2>
-      <p className="text-sm text-ink/60 mb-6">
+      <h2 className="text-2xl text-bleu mb-2">Adhésion + licence</h2>
+      <p className="text-sm text-gris-700 mb-6">
         Tout compris : licence FFT + assurance + accès aux courts.
       </p>
       <div className="grid gap-3">
@@ -613,7 +613,7 @@ function ScreenAct({
                 <strong>
                   Je suis déjà licencié dans un autre club
                 </strong>
-                <span className="block text-sm text-ink/60">
+                <span className="block text-sm text-gris-700">
                   Padel seul · tarif extérieur 170 € · sans réduction
                 </span>
               </span>
@@ -650,12 +650,12 @@ function ScreenCours({
   return (
     <div>
       {total > 1 && (
-        <p className="text-xs font-display uppercase tracking-tight text-court mb-2">
+        <p className="text-xs font-sans uppercase tracking-tight text-bleu mb-2">
           Membre {mIndex + 1} sur {total}
         </p>
       )}
-      <h2 className="text-2xl text-court mb-2">Cours & enseignement</h2>
-      <p className="text-sm text-ink/60 mb-6">
+      <h2 className="text-2xl text-bleu mb-2">Cours & enseignement</h2>
+      <p className="text-sm text-gris-700 mb-6">
         Optionnel — plusieurs choix possibles. Les cours ne sont pas remisés.
       </p>
       <div className="grid gap-3">
@@ -681,12 +681,12 @@ function ScreenCours({
                   <Checkbox checked={on} />
                   <span>
                     <strong>{c.label}</strong>
-                    <span className="block text-xs text-ink/60">
+                    <span className="block text-xs text-gris-700">
                       {c.description}
                     </span>
                   </span>
                 </span>
-                <span className="font-display text-base text-court whitespace-nowrap">
+                <span className="font-sans text-base text-bleu whitespace-nowrap">
                   {c.prix} €
                 </span>
               </div>
@@ -715,8 +715,8 @@ function ScreenRed({
   if (blocked) {
     return (
       <div>
-        <h2 className="text-2xl text-court mb-2">Réductions</h2>
-        <p className="text-sm text-ink/60 mb-6">
+        <h2 className="text-2xl text-bleu mb-2">Réductions</h2>
+        <p className="text-sm text-gris-700 mb-6">
           Le tarif licencié extérieur n&apos;ouvre pas droit aux réductions.
         </p>
         <p className="text-sm italic">Aucune réduction applicable.</p>
@@ -726,8 +726,8 @@ function ScreenRed({
 
   return (
     <div>
-      <h2 className="text-2xl text-court mb-2">Réductions applicables</h2>
-      <p className="text-sm text-ink/60 mb-6">
+      <h2 className="text-2xl text-bleu mb-2">Réductions applicables</h2>
+      <p className="text-sm text-gris-700 mb-6">
         Sur justificatif. S&apos;applique à la part adhésion club.
       </p>
       <Choice
@@ -741,7 +741,7 @@ function ScreenRed({
           <strong>-10% Couple / Étudiant / Chômeur</strong>
         </div>
       </Choice>
-      <p className="text-xs text-ink/60 mt-4">
+      <p className="text-xs text-gris-700 mt-4">
         La réduction -20% «&nbsp;famille&nbsp;» n&apos;est pas disponible pour
         une inscription seule.
       </p>
@@ -762,8 +762,8 @@ function ScreenRecap({
 }) {
   return (
     <div>
-      <h2 className="text-2xl text-court mb-2">Récapitulatif</h2>
-      <p className="text-sm text-ink/60 mb-6">
+      <h2 className="text-2xl text-bleu mb-2">Récapitulatif</h2>
+      <p className="text-sm text-gris-700 mb-6">
         Estimation.{" "}
         {routage?.kind === "simple"
           ? "L'inscription et le paiement se font sur Ten'Up."
@@ -773,9 +773,9 @@ function ScreenRecap({
       {devis.membres.map((m, i) => (
         <div
           key={i}
-          className="mb-4 rounded-card border border-paper-dark overflow-hidden"
+          className="mb-4 rounded-card border border-gris-200 overflow-hidden"
         >
-          <div className="bg-paper-dark px-4 py-2 font-display uppercase tracking-tight text-sm">
+          <div className="bg-gris-100 px-4 py-2 font-sans uppercase tracking-tight text-sm">
             Membre {i + 1} · {m.formuleLabel}
           </div>
           <div className="p-4 text-sm space-y-1">
@@ -806,9 +806,9 @@ function ScreenRecap({
         </div>
       ))}
 
-      <div className="bg-court text-paper rounded-card p-4 flex justify-between items-baseline mb-4">
-        <span className="font-display uppercase tracking-tight">Total</span>
-        <span className="font-display text-2xl text-ball">
+      <div className="bg-bleu text-blanc rounded-card p-4 flex justify-between items-baseline mb-4">
+        <span className="font-sans uppercase tracking-tight">Total</span>
+        <span className="font-sans text-2xl text-jaune">
           {devis.total.toFixed(2)} €
         </span>
       </div>
@@ -816,13 +816,13 @@ function ScreenRecap({
       {routage?.kind === "simple" ? (
         <button
           onClick={onProceedSimple}
-          className="btn-primary w-full bg-ball text-ink hover:bg-flag"
+          className="btn-primary w-full bg-jaune text-noir hover:bg-jaune"
         >
           Finaliser sur Ten&apos;Up →
         </button>
       ) : (
         <>
-          <p className="text-sm text-ink/70 mb-3">
+          <p className="text-sm text-gris-700 mb-3">
             {routage?.raison ??
               "Cette inscription nécessite un traitement par le club."}
           </p>
@@ -852,8 +852,8 @@ function ScreenCoords({
   const valid = canNextCoords(coords);
   return (
     <div>
-      <h2 className="text-2xl text-court mb-2">Vos coordonnées</h2>
-      <p className="text-sm text-ink/60 mb-6">
+      <h2 className="text-2xl text-bleu mb-2">Vos coordonnées</h2>
+      <p className="text-sm text-gris-700 mb-6">
         Pour que le bureau vous recontacte. Vos données restent au club.
       </p>
       <div className="grid gap-3">
@@ -898,7 +898,7 @@ function ScreenCoords({
             value={coords.notes}
             onChange={(e) => set("notes", e.target.value)}
             rows={3}
-            className="w-full rounded-card border border-paper-dark bg-paper px-3 py-2 text-sm"
+            className="w-full rounded-card border border-gris-200 bg-blanc px-3 py-2 text-sm"
           />
         </label>
       </div>
@@ -935,8 +935,8 @@ function Choice({
       onClick={onClick}
       className={`text-left w-full rounded-card border-2 px-4 py-3 transition-colors ${
         selected
-          ? "border-court bg-court/5"
-          : "border-paper-dark bg-paper hover:border-court-light"
+          ? "border-bleu bg-bleu/5"
+          : "border-gris-200 bg-blanc hover:border-bleu-clair"
       }`}
     >
       {children}
@@ -966,18 +966,18 @@ function ActChoice({
       className={`w-full text-left rounded-card border-2 px-4 py-3 transition-colors flex items-baseline justify-between gap-3 ${
         selected
           ? feature
-            ? "border-flag bg-flag/10"
-            : "border-court bg-court/5"
-          : "border-paper-dark bg-paper hover:border-court-light"
+            ? "border-jaune bg-jaune/10"
+            : "border-bleu bg-bleu/5"
+          : "border-gris-200 bg-blanc hover:border-bleu-clair"
       }`}
     >
       <span>
         <strong>{label}</strong>
         {sublabel && (
-          <span className="block text-xs text-ink/60">{sublabel}</span>
+          <span className="block text-xs text-gris-700">{sublabel}</span>
         )}
       </span>
-      <span className="font-display text-xl text-court">{price} €</span>
+      <span className="font-sans text-xl text-bleu">{price} €</span>
     </button>
   );
 }
@@ -985,8 +985,8 @@ function ActChoice({
 function Checkbox({ checked }: { checked: boolean }) {
   return (
     <span
-      className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center text-paper text-xs font-bold ${
-        checked ? "bg-court border-court" : "bg-paper border-paper-dark"
+      className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center text-blanc text-xs font-bold ${
+        checked ? "bg-bleu border-bleu" : "bg-blanc border-gris-200"
       }`}
     >
       {checked && "✓"}
@@ -1009,9 +1009,9 @@ function Row({
     <div
       className={`flex justify-between py-1 ${
         subtotal
-          ? "border-t border-paper-dark mt-2 pt-2 font-display uppercase tracking-tight text-court"
+          ? "border-t border-gris-200 mt-2 pt-2 font-sans uppercase tracking-tight text-bleu"
           : highlight
-            ? "text-court-dark font-medium"
+            ? "text-bleu-fonce font-medium"
             : ""
       }`}
     >
@@ -1045,7 +1045,7 @@ function Field({
         onChange={(e) => onChange(e.target.value)}
         inputMode={inputMode}
         maxLength={maxLength}
-        className="w-full rounded-card border border-paper-dark bg-paper px-3 py-2 text-sm"
+        className="w-full rounded-card border border-gris-200 bg-blanc px-3 py-2 text-sm"
       />
     </label>
   );

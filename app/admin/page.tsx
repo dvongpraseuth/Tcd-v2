@@ -29,7 +29,7 @@ export default async function AdminPage() {
     <div className="container-page py-12">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <p className="font-display uppercase tracking-tight text-court text-sm mb-1">
+          <p className="font-sans uppercase tracking-tight text-bleu text-sm mb-1">
             Admin · {user.user?.email}
           </p>
           <h1 className="text-3xl">Préinscriptions</h1>
@@ -39,18 +39,18 @@ export default async function AdminPage() {
         </form>
       </div>
 
-      {error && <p className="text-flag mb-4">Erreur chargement : {error.message}</p>}
+      {error && <p className="text-jaune mb-4">Erreur chargement : {error.message}</p>}
 
       {(!preinscriptions || preinscriptions.length === 0) && (
         <div className="card-paper text-center py-12">
-          <p className="text-ink/60">Aucune préinscription pour l'instant.</p>
+          <p className="text-gris-700">Aucune préinscription pour l'instant.</p>
         </div>
       )}
 
       {preinscriptions && preinscriptions.length > 0 && (
         <div className="card-paper overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="border-b border-paper-dark">
+            <thead className="border-b border-gris-200">
               <tr className="text-left">
                 <Th>Date</Th>
                 <Th>Email</Th>
@@ -63,7 +63,7 @@ export default async function AdminPage() {
             </thead>
             <tbody>
               {(preinscriptions as PreinscriptionRow[]).map((p) => (
-                <tr key={p.id} className="border-b border-paper-dark/50">
+                <tr key={p.id} className="border-b border-gris-200/50">
                   <Td>{new Date(p.created_at).toLocaleDateString("fr-FR")}</Td>
                   <Td>{p.email}</Td>
                   <Td>{p.ville}</Td>
@@ -75,7 +75,7 @@ export default async function AdminPage() {
                   <Td>
                     <Link
                       href={`/admin/preinscriptions/${p.id}`}
-                      className="text-court underline text-xs"
+                      className="text-bleu underline text-xs"
                     >
                       Détail
                     </Link>
@@ -92,7 +92,7 @@ export default async function AdminPage() {
 
 function Th({ children }: { children?: React.ReactNode }) {
   return (
-    <th className="px-3 py-2 font-display uppercase tracking-tight text-xs text-ink/70">
+    <th className="px-3 py-2 font-sans uppercase tracking-tight text-xs text-gris-700">
       {children}
     </th>
   );
@@ -104,10 +104,10 @@ function Td({ children, className }: { children?: React.ReactNode; className?: s
 
 function StatutBadge({ statut }: { statut: PreinscriptionRow["statut"] }) {
   const styles: Record<PreinscriptionRow["statut"], string> = {
-    en_attente: "bg-flag/30 text-ink",
-    valide: "bg-ball/40 text-ink",
-    paye: "bg-court text-paper",
-    refuse: "bg-paper-dark text-ink/60",
+    en_attente: "bg-jaune/30 text-noir",
+    valide: "bg-jaune/40 text-noir",
+    paye: "bg-bleu text-blanc",
+    refuse: "bg-gris-100 text-gris-700",
   };
   const labels: Record<PreinscriptionRow["statut"], string> = {
     en_attente: "En attente",

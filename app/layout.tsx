@@ -1,41 +1,48 @@
 import type { Metadata } from "next";
-import { Archivo, Hanken_Grotesk } from "next/font/google";
+import { Outfit, Playfair_Display } from "next/font/google";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import "./globals.css";
 
-// Brief §7 — Archivo 700-900 uppercase pour titres (display)
-const archivo = Archivo({
+// Police principale — UI et titres
+const outfit = Outfit({
   subsets: ["latin"],
-  weight: ["700", "800", "900"],
-  variable: "--font-archivo",
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-outfit",
   display: "swap",
 });
 
-// Brief §7 — Hanken Grotesk pour texte courant
-const hanken = Hanken_Grotesk({
+// Police accent éditorial — italique pour les <em>
+const playfair = Playfair_Display({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-hanken",
+  weight: ["700"],
+  style: ["italic"],
+  variable: "--font-playfair",
   display: "swap",
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "Tennis Club Davézieux — Préinscriptions saison 2026-2027",
+    default: "Tennis Club de Davézieux — Tennis & Padel en Ardèche",
     template: "%s — TC Davézieux",
   },
   description:
-    "Tennis, padel et école de tennis à Davézieux (07). Préinscrivez-vous en ligne pour la saison 2026-2027.",
+    "4 courts de tennis, 2 pistes de padel, une école labellisée. Adhésion à partir de 40 €. Préinscriptions ouvertes pour la saison 2026-2027.",
   metadataBase: new URL("https://tc-davezieux.fr"),
   openGraph: {
     type: "website",
     locale: "fr_FR",
     siteName: "TC Davézieux",
+    title: "Tennis Club de Davézieux — Tennis & Padel",
+    description:
+      "Tennis, padel et école dans le complexe de Jossols. Saison 2026-2027.",
   },
   robots: {
     index: true,
     follow: true,
+  },
+  icons: {
+    icon: "/logo-tcd.jpg",
   },
 };
 
@@ -43,10 +50,10 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="fr" className={`${archivo.variable} ${hanken.variable}`}>
+    <html lang="fr" className={`${outfit.variable} ${playfair.variable}`}>
       <body>
         <Nav />
-        <main className="min-h-[calc(100vh-4rem)]">{children}</main>
+        <main>{children}</main>
         <Footer />
       </body>
     </html>

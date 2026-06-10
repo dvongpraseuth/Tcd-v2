@@ -15,14 +15,14 @@ export function EnConstruction({ titre, sousTitre }: EnConstructionProps) {
   return (
     <section className="container-page py-20 sm:py-28">
       <div className="card-paper text-center max-w-xl mx-auto">
-        <p className="font-display uppercase tracking-tight text-court text-sm mb-2">
+        <p className="font-sans uppercase tracking-tight text-bleu text-sm mb-2">
           Saison {process.env.NEXT_PUBLIC_SAISON ?? "2026-2027"}
         </p>
         <h1 className="text-4xl sm:text-5xl mb-4">{titre}</h1>
         {sousTitre && (
-          <p className="text-lg text-ink/70 mb-6">{sousTitre}</p>
+          <p className="text-lg text-gris-700 mb-6">{sousTitre}</p>
         )}
-        <p className="text-base text-ink/60 mb-8">
+        <p className="text-base text-gris-700 mb-8">
           Cette page sera mise en ligne prochainement. En attendant, vous pouvez
           préinscrire votre famille au club ou consulter nos tarifs.
         </p>
