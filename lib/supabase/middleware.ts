@@ -1,4 +1,6 @@
-import "server-only";
+// Pas de `import "server-only"` : le middleware tourne sur Edge Runtime,
+// et l'import "server-only" peut faire crasher l'init du module (donc
+// MIDDLEWARE_INVOCATION_FAILED) selon le pipeline Vercel.
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
