@@ -113,19 +113,19 @@ export function TarifsTeaser() {
   const cards = vue === "adultes" ? ADULTES : JEUNES;
 
   return (
-    <section id="tarifs-teaser" className="py-24 px-5 sm:px-8 bg-blanc">
+    <section id="tarifs-teaser" className="py-14 sm:py-16 px-5 sm:px-8 bg-blanc">
       <div className="max-w-container mx-auto">
         <div className="section-label">Saison {SAISON}</div>
-        <h2 className="text-4xl sm:text-5xl font-extrabold -tracking-[1.5px] leading-tight mb-4 text-noir">
+        <h2 className="text-3xl sm:text-4xl font-extrabold -tracking-[1.5px] leading-tight mb-4 text-noir">
           Nos <em className="text-bleu">tarifs</em>
         </h2>
-        <p className="text-base sm:text-[17px] text-gris-700 leading-relaxed max-w-xl mb-10">
+        <p className="text-base sm:text-[17px] text-gris-700 leading-relaxed max-w-xl mb-7">
           Tarif tout compris : licence FFT + assurance + accès aux courts avec
           réservation gratuite. Accès courts de 8h à 22h, toute l&apos;année.
         </p>
 
         {/* Toggle Adultes / Jeunes */}
-        <div className="inline-flex gap-1 bg-gris-100 rounded-card p-1 mb-10">
+        <div className="inline-flex gap-1 bg-gris-100 rounded-card p-1 mb-7">
           <button
             type="button"
             onClick={() => setVue("adultes")}
@@ -150,15 +150,15 @@ export function TarifsTeaser() {
           </button>
         </div>
 
-        <div className="grid gap-5 md:grid-cols-3 mb-12">
+        <div className="grid gap-5 md:grid-cols-3 mb-8">
           {cards.map((c) => (
             <TarifCard key={c.name} card={c} />
           ))}
         </div>
 
         {/* Cours & Locations en grille compacte */}
-        <div className="mt-12 pt-12 border-t border-gris-200">
-          <h3 className="text-2xl font-bold mb-6 -tracking-[0.5px]">
+        <div className="mt-8 pt-8 border-t border-gris-200">
+          <h3 className="text-2xl font-bold mb-5 -tracking-[0.5px]">
             Cours &amp; Locations
           </h3>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 mb-8">
@@ -194,7 +194,7 @@ export function TarifsTeaser() {
           </div>
         </div>
 
-        <div className="text-center bg-gris-50 rounded-card-lg p-8 md:p-10 border border-gris-200">
+        <div className="text-center bg-gris-50 rounded-card-lg p-6 md:p-7 border border-gris-200">
           <h3 className="text-2xl font-bold mb-3">
             Découvrez toutes les offres
           </h3>
@@ -220,7 +220,7 @@ function TarifCard({ card }: { card: Card }) {
   const isFeature = card.featured ?? false;
   return (
     <article
-      className={`relative rounded-card-lg p-10 border transition-all hover:shadow-tcd-lg ${
+      className={`relative rounded-card-lg p-7 border transition-all hover:shadow-tcd-lg ${
         isFeature
           ? "bg-bleu border-bleu text-blanc"
           : "border-gris-200 bg-blanc hover:border-bleu"

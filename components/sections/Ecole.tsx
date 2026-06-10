@@ -46,7 +46,7 @@ const CARDS: EcoleCardProps[] = [
 
 export function Ecole() {
   return (
-    <section id="ecole" className="py-24 px-5 sm:px-8 bg-bleu relative overflow-hidden">
+    <section id="ecole" className="py-14 sm:py-16 px-5 sm:px-8 bg-bleu relative overflow-hidden">
       <div
         aria-hidden
         className="absolute inset-0"
@@ -61,12 +61,12 @@ export function Ecole() {
           <span className="w-6 h-0.5 bg-jaune" />
           École de tennis
         </div>
-        <h2 className="text-4xl sm:text-5xl font-extrabold -tracking-[1.5px] leading-tight mb-4 text-blanc">
+        <h2 className="text-3xl sm:text-4xl font-extrabold -tracking-[1.5px] leading-tight mb-4 text-blanc">
           Apprendre, progresser,
           <br />
           <em className="text-jaune">s&apos;amuser</em>
         </h2>
-        <p className="text-base sm:text-[17px] text-white/70 leading-relaxed max-w-xl mb-12">
+        <p className="text-base sm:text-[17px] text-white/70 leading-relaxed max-w-xl mb-8">
           Du mini-tennis au pôle compétition, notre équipe pédagogique
           accompagne chaque joueur selon son âge et ses objectifs.
         </p>
@@ -75,7 +75,7 @@ export function Ecole() {
           {CARDS.map((c) => (
             <article
               key={c.title}
-              className="bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-card p-8 transition-all hover:bg-white/[0.12] hover:-translate-y-1"
+              className="bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-card p-6 transition-all hover:bg-white/[0.12] hover:-translate-y-1"
             >
               <div className="text-3xl mb-4" aria-hidden>
                 {c.icon}

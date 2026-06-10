@@ -33,13 +33,13 @@ const EQUIPE: MembreProps[] = [
 
 export function Equipe() {
   return (
-    <section id="equipe" className="py-24 px-5 sm:px-8 bg-gris-50">
+    <section id="equipe" className="py-14 sm:py-16 px-5 sm:px-8 bg-gris-50">
       <div className="max-w-container mx-auto">
         <div className="section-label">L&apos;équipe</div>
-        <h2 className="text-4xl sm:text-5xl font-extrabold -tracking-[1.5px] leading-tight mb-4 text-noir">
+        <h2 className="text-3xl sm:text-4xl font-extrabold -tracking-[1.5px] leading-tight mb-4 text-noir">
           Nos <em className="text-bleu">enseignants</em>
         </h2>
-        <p className="text-base sm:text-[17px] text-gris-700 leading-relaxed max-w-xl mb-12">
+        <p className="text-base sm:text-[17px] text-gris-700 leading-relaxed max-w-xl mb-8">
           Une équipe pédagogique passionnée et diplômée pour vous accompagner à
           chaque étape.
         </p>
@@ -48,7 +48,7 @@ export function Equipe() {
           {EQUIPE.map((m) => (
             <article
               key={m.nom}
-              className="bg-blanc rounded-card-lg p-9 border border-gris-200 text-center transition-all hover:shadow-tcd-lg hover:-translate-y-1"
+              className="bg-blanc rounded-card-lg p-6 border border-gris-200 text-center transition-all hover:shadow-tcd-lg hover:-translate-y-1"
             >
               <div
                 className="rounded-full mx-auto mb-5 flex items-center justify-center text-4xl font-extrabold text-blanc"

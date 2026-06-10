@@ -45,13 +45,13 @@ const INSTALLS: InstallCardProps[] = [
 
 export function Installations() {
   return (
-    <section id="installations" className="py-24 px-5 sm:px-8 bg-blanc">
+    <section id="installations" className="py-14 sm:py-16 px-5 sm:px-8 bg-blanc">
       <div className="max-w-container mx-auto">
         <div className="section-label">Nos installations</div>
-        <h2 className="text-4xl sm:text-5xl font-extrabold -tracking-[1.5px] leading-tight mb-4 text-noir">
+        <h2 className="text-3xl sm:text-4xl font-extrabold -tracking-[1.5px] leading-tight mb-4 text-noir">
           Un complexe <em className="text-bleu">complet</em>
         </h2>
-        <p className="text-base sm:text-[17px] text-gris-700 leading-relaxed max-w-xl mb-12">
+        <p className="text-base sm:text-[17px] text-gris-700 leading-relaxed max-w-xl mb-8">
           Au cœur du complexe sportif de Jossols, profitez d&apos;installations
           modernes et éclairées, accessibles toute l&apos;année.
         </p>
@@ -62,7 +62,7 @@ export function Installations() {
               key={i.title}
               className="bg-blanc rounded-card-lg overflow-hidden border border-gris-200 transition-all hover:shadow-tcd-lg hover:-translate-y-1 group"
             >
-              <div className="relative h-52 overflow-hidden">
+              <div className="relative h-44 overflow-hidden">
                 <Image
                   src={i.img}
                   alt={i.alt}

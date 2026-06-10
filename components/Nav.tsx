@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 const SECTIONS = [
+  { href: "/", label: "Accueil" },
   { href: "/#installations", label: "Installations" },
   { href: "/#ecole", label: "École" },
   { href: "/tarifs", label: "Tarifs" },

@@ -44,10 +44,10 @@ export function Partenaires() {
     <section className="py-16 px-8 bg-blanc">
       <div className="max-w-container mx-auto">
         <div className="section-label">Nos partenaires</div>
-        <h2 className="text-3xl font-extrabold -tracking-[1.5px] leading-tight mb-10 text-noir">
+        <h2 className="text-3xl font-extrabold -tracking-[1.5px] leading-tight mb-7 text-noir">
           Ils nous <em className="text-bleu">soutiennent</em>
         </h2>
-        <div className="flex items-center justify-center gap-8 sm:gap-12 flex-wrap py-6">
+        <div className="flex items-center justify-center gap-6 sm:gap-12 flex-wrap py-6">
           {PARTENAIRES.map((p) => (
             <a
               key={p.alt}

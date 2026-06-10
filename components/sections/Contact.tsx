@@ -36,7 +36,7 @@ const ITEMS = [
 
 export function Contact() {
   return (
-    <section id="contact" className="py-24 px-5 sm:px-8 bg-noir text-blanc relative overflow-hidden">
+    <section id="contact" className="py-14 sm:py-16 px-5 sm:px-8 bg-noir text-blanc relative overflow-hidden">
       <div
         aria-hidden
         className="absolute -top-[200px] -right-[200px] w-[500px] h-[500px] rounded-full bg-bleu opacity-15 blur-[100px]"
@@ -47,16 +47,16 @@ export function Contact() {
           <span className="w-6 h-0.5 bg-jaune" />
           Nous trouver
         </div>
-        <h2 className="text-4xl sm:text-5xl font-extrabold -tracking-[1.5px] leading-tight mb-4 text-blanc">
+        <h2 className="text-3xl sm:text-4xl font-extrabold -tracking-[1.5px] leading-tight mb-4 text-blanc">
           Venir au <em className="text-jaune">club</em>
         </h2>
-        <p className="text-base sm:text-[17px] text-white/50 leading-relaxed max-w-xl mb-12">
+        <p className="text-base sm:text-[17px] text-white/50 leading-relaxed max-w-xl mb-8">
           Complexe sportif de Jossols, au cœur de Davézieux. Courts accessibles
           de 8h à 22h toute l&apos;année.
         </p>
 
-        <div className="grid md:grid-cols-2 gap-12">
-          <div className="flex flex-col gap-6">
+        <div className="grid md:grid-cols-2 gap-10">
+          <div className="flex flex-col gap-5">
             {ITEMS.map((it) => (
               <div key={it.label} className="flex items-start gap-4">
                 <div className="w-11 h-11 rounded-card bg-jaune/10 flex items-center justify-center text-lg flex-shrink-0">
@@ -94,7 +94,7 @@ export function Contact() {
             </div>
           </div>
 
-          <div className="rounded-card-lg overflow-hidden h-[420px] bg-gris-800 border border-white/10">
+          <div className="rounded-card-lg overflow-hidden h-[360px] bg-gris-800 border border-white/10">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2812.5!2d4.70339!3d45.251816!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47f5a5d0b0b0b0b0%3A0x0!2sComplexe+sportif+Jossols%2C+Rue+des+Fonds%2C+07430+Dav%C3%A9zieux!5e1!3m2!1sfr!2sfr!4v1"
               width="100%"

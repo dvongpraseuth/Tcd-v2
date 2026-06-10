@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function DecouverteEte() {
   return (
-    <section className="py-20 px-5 sm:px-8 bg-jaune-pale relative overflow-hidden">
+    <section className="py-12 sm:py-14 px-5 sm:px-8 bg-jaune-pale relative overflow-hidden">
       <div
         aria-hidden
         className="absolute -bottom-[100px] -left-[100px] w-[400px] h-[400px] rounded-full bg-jaune/30 blur-[80px]"
@@ -13,7 +13,7 @@ export function DecouverteEte() {
           <div className="inline-flex items-center gap-2 bg-bleu text-jaune text-xs font-bold uppercase tracking-[2px] px-4 py-2 rounded-full mb-5">
             ☀️ Pour vos amis cet été
           </div>
-          <h2 className="text-4xl sm:text-[44px] font-extrabold -tracking-[1.5px] leading-tight mb-5 text-bleu-fonce">
+          <h2 className="text-4xl sm:text-[36px] font-extrabold -tracking-[1.5px] leading-tight mb-5 text-bleu-fonce">
             Faites-leur découvrir
             <br />
             le <em className="text-bleu">club</em>

@@ -5,7 +5,7 @@ export function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-[calc(100vh-72px)] flex items-center bg-bleu overflow-hidden -mt-[72px] pt-[72px]"
+      className="relative min-h-[620px] flex items-center bg-bleu overflow-hidden -mt-[72px] pt-[72px]"
     >
       {/* Background image */}
       <Image
@@ -31,26 +31,26 @@ export function Hero() {
         className="absolute -bottom-[20%] -right-[10%] w-[600px] h-[600px] rounded-full bg-jaune opacity-[0.06] blur-[80px] z-[1]"
       />
 
-      <div className="container-page relative z-10 py-20 sm:py-28 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <div className="container-page relative z-10 py-14 sm:py-16 grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
         <div className="animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 bg-jaune/15 border border-jaune/30 text-jaune px-4 py-2 rounded-full text-[13px] font-semibold tracking-wide mb-7">
+          <div className="inline-flex items-center gap-2 bg-jaune/15 border border-jaune/30 text-jaune px-3.5 py-1.5 rounded-full text-[12px] font-semibold tracking-wide mb-5">
             <span aria-hidden>🎾</span> Depuis 1986 à Davézieux
           </div>
-          <h1 className="text-[40px] sm:text-[56px] lg:text-[64px] font-extrabold text-blanc -tracking-[2px] leading-[1.05] mb-6">
+          <h1 className="text-[36px] sm:text-[48px] lg:text-[56px] font-extrabold text-blanc -tracking-[2px] leading-[1.05] mb-5">
             Tennis &amp; Padel
             <br />
             pour <em className="text-jaune">tous</em>
           </h1>
-          <p className="text-base sm:text-lg text-white/70 leading-relaxed max-w-lg mb-10 font-light">
+          <p className="text-base text-white/70 leading-relaxed max-w-lg mb-7 font-light">
             4 courts de tennis, 2 pistes de padel, une école labellisée et une
             équipe passionnée au cœur de l&apos;Ardèche.
           </p>
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-3">
             <a
               href="https://tenup.fft.fr/club/50070493/reservations"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-primary"
+              className="inline-flex items-center justify-center gap-2 rounded-card px-6 py-3 bg-jaune text-bleu-fonce font-semibold text-sm transition-all hover:bg-jaune-clair hover:-translate-y-0.5 hover:shadow-tcd-jaune"
             >
               Réservation Adhérents →
             </a>
@@ -58,12 +58,12 @@ export function Hero() {
               href="https://www.anybuddyapp.com/club-davezieux-tennis"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-outline"
+              className="inline-flex items-center justify-center gap-2 rounded-card px-6 py-3 bg-transparent text-blanc border-[1.5px] border-white/30 font-semibold text-sm transition-all hover:border-blanc hover:bg-white/10 hover:-translate-y-0.5"
             >
               Réservation Guest →
             </a>
           </div>
-          <div className="mt-6">
+          <div className="mt-4">
             <Link
               href="/inscription"
               className="text-sm text-white/60 hover:text-jaune transition-colors underline decoration-jaune/40 decoration-2 underline-offset-4"
@@ -73,12 +73,13 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 animate-fade-in-up-delay">
-          <StatCard featured number="~270" label="adhérents cette saison" icon="📊" />
-          <StatCard number="4" label="courts de tennis éclairés" />
-          <StatCard number="2" label="pistes de padel" />
-          <StatCard number="8" label="équipes en championnat" />
-          <StatCard number="8h–22h" label="accès courts toute l'année" full />
+        <div className="grid grid-cols-3 gap-3 animate-fade-in-up-delay">
+          <StatCard featured number="~270" label="adhérents" full />
+          <StatCard number="4" label="courts tennis" />
+          <StatCard number="2" label="pistes padel" />
+          <StatCard number="8" label="équipes championnat" />
+          <StatCard number="8h–22h" label="accès courts" />
+          <StatCard number="40+" label="ans d'existence" />
         </div>
       </div>
     </section>
@@ -88,7 +89,6 @@ export function Hero() {
 function StatCard({
   number,
   label,
-  icon,
   featured = false,
   full = false,
 }: {
@@ -100,17 +100,18 @@ function StatCard({
 }) {
   return (
     <div
-      className={`${full ? "col-span-2" : ""} ${
+      className={`${full ? "col-span-3" : ""} ${
         featured
-          ? "col-span-2 bg-jaune/10 border-jaune/20"
+          ? "bg-jaune/10 border-jaune/20"
           : "bg-white/[0.07] border-white/10"
-      } backdrop-blur-md border rounded-card p-6 sm:p-7 transition-all hover:bg-white/[0.12] hover:-translate-y-1`}
+      } backdrop-blur-md border rounded-card px-4 py-3.5 transition-all hover:bg-white/[0.12] hover:-translate-y-0.5`}
     >
-      {icon && <div className="text-3xl mb-3" aria-hidden>{icon}</div>}
-      <div className="text-3xl sm:text-4xl font-extrabold text-jaune -tracking-[1px]">
+      <div className="text-2xl sm:text-3xl font-extrabold text-jaune -tracking-[1px]">
         {number}
       </div>
-      <div className="text-[13px] text-white/60 mt-1 font-normal">{label}</div>
+      <div className="text-[12px] text-white/60 mt-0.5 font-normal leading-tight">
+        {label}
+      </div>
     </div>
   );
 }

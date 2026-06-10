@@ -15,10 +15,10 @@ const LABELS = [
 
 export function Labels() {
   return (
-    <section className="py-20 px-5 sm:px-8 bg-blanc">
+    <section className="py-12 sm:py-14 px-5 sm:px-8 bg-blanc">
       <div className="max-w-container mx-auto">
         <div className="section-label">Labels &amp; Certifications</div>
-        <div className="flex justify-center gap-8 sm:gap-12 flex-wrap py-10 border-t border-b border-gris-200">
+        <div className="flex justify-center gap-6 sm:gap-12 flex-wrap py-10 border-t border-b border-gris-200">
           {LABELS.map((l, i) => (
             <div
               key={i}
