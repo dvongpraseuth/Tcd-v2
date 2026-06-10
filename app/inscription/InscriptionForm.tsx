@@ -304,7 +304,7 @@ export default function InscriptionForm() {
             {screen?.t === "mode" && (
               <ScreenMode mode={mode} onSelect={selectMode} />
             )}
-            {screen?.t === "count" && count !== null && (
+            {screen?.t === "count" && (
               <ScreenCount count={count} onSelect={selectCount} />
             )}
             {screen?.t === "cat" && screen.m !== undefined && (
@@ -423,7 +423,7 @@ function ScreenCount({
   count,
   onSelect,
 }: {
-  count: number;
+  count: number | null;
   onSelect: (n: number) => void;
 }) {
   return (

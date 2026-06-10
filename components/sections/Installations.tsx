@@ -1,26 +1,28 @@
+import Image from "next/image";
+
 interface InstallCardProps {
-  emoji: string;
+  img: string;
+  alt: string;
   title: string;
   desc: string;
   tags: string[];
-  bg: string;
   extra?: React.ReactNode;
 }
 
 const INSTALLS: InstallCardProps[] = [
   {
-    emoji: "🎾",
+    img: "/images/tennis-match-jeune.jpg",
+    alt: "Match de tennis jeunes sur les courts du TCD",
     title: "4 Courts de Tennis",
     desc: "2 courts en béton poreux (rénovés en 2015) et 2 courts en résine, tous éclairés et en extérieur.",
     tags: ["Béton poreux × 2", "Résine × 2", "Éclairage"],
-    bg: "linear-gradient(135deg, #2E3B8C, #3D4FA6)",
   },
   {
-    emoji: "🏸",
+    img: "/images/padel-action-babolat.jpg",
+    alt: "Action sur piste de padel",
     title: "2 Pistes de Padel",
     desc: "Pistes PHOENIX et CONSERVATEUR en gazon synthétique, éclairées. Tournois P25 à P2000 autorisés.",
     tags: ["Gazon synthétique", "Éclairage", "⭐ 4.3/5"],
-    bg: "linear-gradient(135deg, #F2C94C, #E0A820)",
     extra: (
       <a
         href="https://padelslot.fr"
@@ -33,11 +35,11 @@ const INSTALLS: InstallCardProps[] = [
     ),
   },
   {
-    emoji: "🍽️",
+    img: "/images/equipe-club-region.jpg",
+    alt: "Équipe du club au club house",
     title: "Club House",
     desc: "Bar, cuisine, terrasse avec barbecue, salle de jeux, TV, Wi-Fi. Le lieu de vie du club après vos matchs.",
     tags: ["Bar", "Terrasse", "BBQ", "Wi-Fi"],
-    bg: "linear-gradient(135deg, #495057, #1A1A1A)",
   },
 ];
 
@@ -58,14 +60,20 @@ export function Installations() {
           {INSTALLS.map((i) => (
             <article
               key={i.title}
-              className="bg-blanc rounded-card-lg overflow-hidden border border-gris-200 transition-all hover:shadow-tcd-lg hover:-translate-y-1"
+              className="bg-blanc rounded-card-lg overflow-hidden border border-gris-200 transition-all hover:shadow-tcd-lg hover:-translate-y-1 group"
             >
-              <div
-                className="h-52 flex items-center justify-center text-7xl relative"
-                style={{ background: i.bg }}
-              >
-                <span aria-hidden>{i.emoji}</span>
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40" />
+              <div className="relative h-52 overflow-hidden">
+                <Image
+                  src={i.img}
+                  alt={i.alt}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40"
+                />
               </div>
               <div className="p-7">
                 <h3 className="text-xl font-bold mb-2 -tracking-[0.3px]">

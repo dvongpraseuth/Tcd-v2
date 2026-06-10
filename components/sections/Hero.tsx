@@ -1,21 +1,34 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center bg-bleu overflow-hidden pt-[72px]"
+      className="relative min-h-[calc(100vh-72px)] flex items-center bg-bleu overflow-hidden -mt-[72px] pt-[72px]"
     >
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, rgba(30, 42, 110, 0.92) 0%, rgba(30, 42, 110, 0.85) 50%, rgba(30, 42, 110, 0.7) 100%), radial-gradient(ellipse at 20% 80%, rgba(242, 201, 76, 0.15) 0%, transparent 60%)",
-        }}
+      {/* Background image */}
+      <Image
+        src="/images/drone-complexe-bleu.jpg"
+        alt="Vue aérienne du complexe sportif"
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-[center_40%] z-0"
       />
+      {/* Overlay gradient */}
       <div
         aria-hidden
-        className="absolute -bottom-[20%] -right-[10%] w-[600px] h-[600px] rounded-full bg-jaune opacity-[0.06] blur-[80px] z-0"
+        className="absolute inset-0 z-[1]"
+        style={{
+          background:
+            "linear-gradient(to right, rgba(30, 42, 110, 0.92) 0%, rgba(30, 42, 110, 0.75) 50%, rgba(30, 42, 110, 0.6) 100%), radial-gradient(ellipse at 20% 80%, rgba(242, 201, 76, 0.15) 0%, transparent 60%)",
+        }}
+      />
+      {/* Yellow blob accent */}
+      <div
+        aria-hidden
+        className="absolute -bottom-[20%] -right-[10%] w-[600px] h-[600px] rounded-full bg-jaune opacity-[0.06] blur-[80px] z-[1]"
       />
 
       <div className="container-page relative z-10 py-20 sm:py-28 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
@@ -41,8 +54,21 @@ export function Hero() {
             >
               Réservation Adhérents →
             </a>
-            <Link href="/inscription" className="btn-outline">
-              Préinscription saison →
+            <a
+              href="https://www.anybuddyapp.com/club-davezieux-tennis"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-outline"
+            >
+              Réservation Guest →
+            </a>
+          </div>
+          <div className="mt-6">
+            <Link
+              href="/inscription"
+              className="text-sm text-white/60 hover:text-jaune transition-colors underline decoration-jaune/40 decoration-2 underline-offset-4"
+            >
+              Préinscription saison 2026-2027 →
             </Link>
           </div>
         </div>

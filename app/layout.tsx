@@ -53,7 +53,7 @@ export default function RootLayout({
     <html lang="fr" className={`${outfit.variable} ${playfair.variable}`}>
       <body>
         <Nav />
-        <main>{children}</main>
+        <main className="pt-[72px]">{children}</main>
         <Footer />
       </body>
     </html>
