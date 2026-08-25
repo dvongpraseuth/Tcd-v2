@@ -7,6 +7,7 @@ import {
   type FormuleKey,
 } from "@/config/tarifs";
 import { CLUB_CONTACT, TENUP_OFFRES_URL } from "@/config/inscriptions";
+import { FileAttenteTenup } from "@/components/FileAttenteTenup";
 import { OffreCard } from "@/components/OffreCard";
 import { CoursCard } from "@/components/CoursCard";
 
@@ -196,6 +197,9 @@ export default function TarifsPage() {
               Voir sur Ten&apos;Up →
             </a>
           </div>
+          {/* 25/08/2026 — deuxième porte vers Ten'Up, même avertissement que
+              dans le tunnel de préinscription. */}
+          <FileAttenteTenup className="mt-5 mx-auto max-w-xl text-left" />
           <p className="mt-6 text-sm text-white/70">
             Une question&nbsp;? Appelez le {CLUB_CONTACT.telephone}
           </p>

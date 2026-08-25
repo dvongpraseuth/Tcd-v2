@@ -12,6 +12,7 @@ import {
 import { routerInscription } from "@/config/inscriptions";
 import { calculerDevis, type MembreInput } from "@/lib/compute-totals";
 import { coursEligibles } from "@/lib/eligibilite-cours";
+import { FileAttenteTenup } from "@/components/FileAttenteTenup";
 
 /**
  * ============================================================
@@ -814,12 +815,18 @@ function ScreenRecap({
       </div>
 
       {routage?.kind === "simple" ? (
-        <button
-          onClick={onProceedSimple}
-          className="btn-primary w-full bg-jaune text-noir hover:bg-jaune"
-        >
-          Finaliser sur Ten&apos;Up →
-        </button>
+        <>
+          {/* 25/08/2026 — prévenir AVANT le saut : la FFT met tout Ten'Up en
+              file d'attente pendant les inscriptions. Sans avertissement,
+              l'adhérent croit que ça a planté et ferme l'onglet. */}
+          <FileAttenteTenup className="mb-3" />
+          <button
+            onClick={onProceedSimple}
+            className="btn-primary w-full bg-jaune text-noir hover:bg-jaune"
+          >
+            Finaliser sur Ten&apos;Up →
+          </button>
+        </>
       ) : (
         <>
           <p className="text-sm text-gris-700 mb-3">
