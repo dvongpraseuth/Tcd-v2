@@ -16,10 +16,16 @@ export const TENUP_BASE = `https://tenup.fft.fr/club/${TENUP_CLUB_ID}` as const;
 
 /**
  * Construit l'URL deep-link Ten'Up pour une offre donnée.
- * Confirmé fonctionnel par David le 09/06/2026.
+ *
+ * ⚠️ 25/08/2026 — le segment est `/offres/` au PLURIEL. Il était au singulier
+ * depuis le 09/06 (« confirmé fonctionnel » à l'époque) et la redirection
+ * cassait : David l'a constaté en navigateur le jour de la mise en ligne.
+ * À noter pour toute vérification future : `curl` ne permet PAS de trancher —
+ * les deux formes renvoient un 302 vers la file d'attente queue-it de la FFT,
+ * qui accepte n'importe quelle cible. Seul un test en navigateur fait foi.
  */
 export function buildTenupOfferUrl(tenupId: number): string {
-  return `${TENUP_BASE}/offre/${tenupId}`;
+  return `${TENUP_BASE}/offres/${tenupId}`;
 }
 
 /** URL de fallback (liste des offres) si un mapping manque. */
