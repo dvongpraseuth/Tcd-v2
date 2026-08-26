@@ -469,9 +469,12 @@ function ScreenCat({
           Membre {mIndex + 1} sur {total}
         </p>
       )}
+      {/* 26/08 (David) — la phrase sur le genre traînait ici, sous le titre
+          « Catégorie d'âge » : incohérent. Chaque explication vit désormais
+          sous SA question. */}
       <h2 className="text-2xl text-bleu mb-2">Catégorie d&apos;âge</h2>
       <p className="text-sm text-gris-700 mb-6">
-        Le genre sert à proposer les bons cours (Dame / Homme).
+        L&apos;âge détermine la formule d&apos;adhésion et les cours proposés.
       </p>
       <div className="grid gap-3 mb-6">
         {(
@@ -498,7 +501,10 @@ function ScreenCat({
           </Choice>
         ))}
       </div>
-      <p className="text-sm font-medium mb-3">Genre</p>
+      <p className="text-sm font-medium mb-1">Genre</p>
+      <p className="text-xs text-gris-700 mb-3">
+        Sert à proposer les bons cours adultes (Dame / Homme).
+      </p>
       <div className="grid grid-cols-2 gap-3">
         <Choice
           selected={membre.sexe === "F"}
