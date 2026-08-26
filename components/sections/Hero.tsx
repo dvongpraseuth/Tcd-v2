@@ -45,12 +45,13 @@ export function Hero() {
             4 courts de tennis, 2 pistes de padel, une école labellisée et une
             équipe passionnée au cœur de l&apos;Ardèche.
           </p>
-          <div className="flex flex-wrap gap-3">
+          {/* 26/08 (David) : les 2 réservations sur LA MÊME ligne, y compris mobile. */}
+          <div className="flex flex-nowrap gap-2 sm:gap-3">
             <a
               href="https://tenup.fft.fr/club/50070493/reservations"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-card px-6 py-3 bg-jaune text-bleu-fonce font-semibold text-sm transition-all hover:bg-jaune-clair hover:-translate-y-0.5 hover:shadow-tcd-jaune"
+              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1 rounded-card px-3 sm:px-6 py-3 bg-jaune text-bleu-fonce font-semibold text-[13px] sm:text-sm whitespace-nowrap transition-all hover:bg-jaune-clair hover:-translate-y-0.5 hover:shadow-tcd-jaune"
             >
               Réservation Adhérents →
             </a>
@@ -58,7 +59,7 @@ export function Hero() {
               href="https://www.anybuddyapp.com/club-davezieux-tennis"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-card px-6 py-3 bg-transparent text-blanc border-[1.5px] border-white/30 font-semibold text-sm transition-all hover:border-blanc hover:bg-white/10 hover:-translate-y-0.5"
+              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1 rounded-card px-3 sm:px-6 py-3 bg-transparent text-blanc border-[1.5px] border-white/30 font-semibold text-[13px] sm:text-sm whitespace-nowrap transition-all hover:border-blanc hover:bg-white/10 hover:-translate-y-0.5"
             >
               Réservation Guest →
             </a>
@@ -74,7 +75,8 @@ export function Hero() {
         </div>
 
         <div className="grid grid-cols-3 gap-3 animate-fade-in-up-delay">
-          <StatCard featured number="~270" label="adhérents" full />
+          {/* 450 = chiffre annoncé à la réunion de bureau du 24/08 (David). */}
+          <StatCard featured number="450" label="adhérents" />
           <StatCard number="4" label="courts tennis" />
           <StatCard number="2" label="pistes padel" />
           <StatCard number="8" label="équipes championnat" />
@@ -104,9 +106,9 @@ function StatCard({
         featured
           ? "bg-jaune/10 border-jaune/20"
           : "bg-white/[0.07] border-white/10"
-      } backdrop-blur-md border rounded-card px-4 py-3.5 transition-all hover:bg-white/[0.12] hover:-translate-y-0.5`}
+      } backdrop-blur-md border rounded-card px-3 py-2 sm:px-4 sm:py-3 transition-all hover:bg-white/[0.12] hover:-translate-y-0.5`}
     >
-      <div className="text-2xl sm:text-3xl font-extrabold text-jaune -tracking-[1px]">
+      <div className="text-xl sm:text-2xl font-extrabold text-jaune -tracking-[1px]">
         {number}
       </div>
       <div className="text-[12px] text-white/60 mt-0.5 font-normal leading-tight">
