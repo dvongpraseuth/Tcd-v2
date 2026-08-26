@@ -1,5 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+// 26/08 — client SERVICE, pas anon : la RLS n'accorde à anon que INSERT
+// (pas SELECT, exprès — données personnelles), or cette route fait
+// .insert().select("id") pour chaîner l'insert des membres. Avec anon,
+// PostgREST répondait 42501 → 500 sur le formulaire. Voir lib/supabase/service.ts.
+import { createServiceClient } from "@/lib/supabase/service";
 import { preinscriptionSchema } from "@/app/inscription/schema";
 import { calculerDevis } from "@/lib/compute-totals";
 import { profilFor } from "@/lib/profile";
@@ -58,7 +62,7 @@ export async function POST(request: NextRequest) {
     })),
   });
 
-  const supabase = await createClient();
+  const supabase = createServiceClient();
 
   // 1. Insert préinscription
   const { data: preins, error: errIns } = await supabase
