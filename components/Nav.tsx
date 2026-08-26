@@ -39,9 +39,14 @@ export function Nav() {
             className="rounded-full object-cover"
             priority
           />
-          <span className="font-bold text-[18px] -tracking-tight">
-            TC Davézieux{" "}
-            <span className="text-jaune bg-bleu px-2 py-0.5 rounded text-[11px] tracking-[1px] ml-2 align-middle font-bold uppercase">
+          {/* 26/08 (David, « ça bave en haut ») : sur mobile le badge cassait
+              en deux lignes à côté du nom (« TENNIS & » / « PADEL » décalés).
+              whitespace-nowrap sur le nom ET le badge, et le badge ne
+              s'affiche qu'à partir de sm — sur petit écran le logo + le nom
+              suffisent, le titre de l'onglet dit déjà le reste. */}
+          <span className="flex items-center whitespace-nowrap font-bold text-[18px] -tracking-tight">
+            TC Davézieux
+            <span className="hidden sm:inline-block whitespace-nowrap text-jaune bg-bleu px-2 py-0.5 rounded text-[11px] tracking-[1px] ml-2 font-bold uppercase">
               Tennis &amp; Padel
             </span>
           </span>
