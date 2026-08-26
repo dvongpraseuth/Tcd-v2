@@ -23,10 +23,12 @@ const EQUIPE: MembreProps[] = [
     gradient: "linear-gradient(135deg, #E0A820, #F2C94C)",
   },
   {
-    initiales: "SR",
-    nom: "Samuel Reynaud",
+    initiales: "JR",
+    nom: "Jacky Reynaud",
     role: "Assistant Moniteur",
-    diplome: "Initiateur Fédéral — Encadrement école de tennis",
+    // 26/08 : Jacky remplace son fils Samuel. « Initiateur Fédéral » était le
+    // diplôme de Samuel — on ne l'attribue pas à Jacky sans confirmation.
+    diplome: "Encadrement école de tennis",
     gradient: "linear-gradient(135deg, #495057, #343A40)",
   },
 ];

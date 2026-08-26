@@ -22,7 +22,7 @@ const CARDS: EcoleCardProps[] = [
     icon: "🎯",
     title: "Ados & Adultes",
     age: "14 ans et +",
-    desc: "25-30 séances d'1h15. Cours dames et hommes. À partir de 130 €.",
+    desc: "25-30 séances d'1h15. Cours dames et hommes. À partir de 90 €.",
   },
   {
     icon: "🏆",

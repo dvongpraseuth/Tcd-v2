@@ -99,13 +99,13 @@ const JEUNES: Card[] = [
 const EXTRAS = [
   { icon: "👶", name: "Mini-Tennis (4-6 ans)", detail: "25 × 1h · le mercredi", prix: "85€" },
   { icon: "🚀", name: "Galaxie Tennis (6-13 ans)", detail: "25-30 × 1h30", prix: "à partir de 120€" },
-  { icon: "👩", name: "Adultes Dames", detail: "25-30 × 1h15", prix: "140€" },
-  { icon: "👨", name: "Adultes Hommes", detail: "25-30 × 1h15", prix: "160€" },
+  { icon: "👩", name: "Adultes Dames", detail: "25-30 × 1h15", prix: "90€" },
+  { icon: "👨", name: "Adultes Hommes", detail: "25-30 × 1h15", prix: "110€" },
   { icon: "🏆", name: "Pôle Compétition (13+)", detail: "25-30 × 1h15 + hebdo", prix: "235€" },
   { icon: "💚", name: "Tennis/Padel Santé", detail: "15-20 × 1h", prix: "50€" },
   { icon: "🎾", name: "Location court tennis", detail: "Joueurs extérieurs ≥ 15 ans", prix: "8€ / ticket" },
   { icon: "🏸", name: "Location piste padel", detail: "Carnet 4 tickets × 1h30", prix: "40€" },
-  { icon: "🎁", name: "Stages vacances scolaires", detail: "Jeunes · Encadrés par BE", prix: "Gratuit", highlight: true },
+  { icon: "🎾", name: "Stages vacances scolaires", detail: "Jeunes · Encadrés par BE", prix: "55-130€ / jour" },
 ];
 
 export function TarifsTeaser() {
