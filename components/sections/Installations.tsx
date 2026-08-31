@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { PADELSLOT_LINKS } from "@/config/padelslot";
 
 interface InstallCardProps {
   img: string;
@@ -25,7 +26,7 @@ const INSTALLS: InstallCardProps[] = [
     tags: ["Gazon synthétique", "Éclairage", "⭐ 4.3/5"],
     extra: (
       <a
-        href="https://padelslot.fr"
+        href={PADELSLOT_LINKS.installations}
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex items-center gap-2 mt-4 px-6 py-3 bg-bleu text-blanc font-bold text-[15px] rounded-card transition-all hover:-translate-y-0.5 hover:shadow-tcd-lg"

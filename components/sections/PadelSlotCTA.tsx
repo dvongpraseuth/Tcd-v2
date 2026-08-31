@@ -1,3 +1,5 @@
+import { PADELSLOT_LINKS } from "@/config/padelslot";
+
 export function PadelSlotCTA() {
   return (
     <section
@@ -41,7 +43,7 @@ export function PadelSlotCTA() {
         </div>
         <div className="flex-shrink-0 text-center">
           <a
-            href="https://padelslot.fr"
+            href={PADELSLOT_LINKS.cta}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block px-10 py-5 bg-jaune text-bleu-fonce font-extrabold text-[17px] rounded-card transition-all hover:-translate-y-1 shadow-tcd-jaune"
